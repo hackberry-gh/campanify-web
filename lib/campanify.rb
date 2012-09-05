@@ -39,8 +39,6 @@ module Campanify
     end
   end
   
-  APPS_DIR = "/Users/onuruyar/Sites/campanify/apps"
-  
   extend ActiveSupport::Concern
   
   def safe_create(name, plan)

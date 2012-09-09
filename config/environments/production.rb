@@ -68,4 +68,5 @@ CampanifyWeb::Application.configure do
   config.action_mailer.default_url_options = { :host => 'campanify.it' }
 end
 
+# APPS_DIR = "#{Rails.root}/tmp"
 APPS_DIR = "/var/www/campanify/apps"

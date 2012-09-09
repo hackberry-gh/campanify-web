@@ -15,6 +15,8 @@ if defined?(Bundler)
   Bundler.require(:default, :assets, Rails.env)
 end
 
+$stdout.sync = true if Rails.env.development?
+
 module CampanifyWeb
   class Application < Rails::Application
     # .env loading for development

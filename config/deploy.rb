@@ -1,12 +1,13 @@
+require "bundler/capistrano"
+
 set :user, "root"
 set :password, "8rENJNLD"
 
 set :application, "campanify-web"
-set :repository,  "git://git@78.47.40.172:/opt/git/campanify-web.git"
+set :repository,  "git@78.47.40.172:/opt/git/campanify-web.git"
 
 set :scm, :git
 set :scm_username, "git"
-set :scm_password, "git"
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 set :deploy_to, "/var/www/campanify/web"

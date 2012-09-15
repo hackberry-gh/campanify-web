@@ -1,0 +1,54 @@
+<div id="my_campaigns_modal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>My Campaigns</h3>
+  </div>
+  <div class="modal-body">
+    
+  </div>
+</div>
+<script id="campaigns_template_table" type="text/x-jquery-tmpl">
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Visit</th>
+      <th>Name</th>
+      <th>Plan</th>
+      <th>Status</th>
+      <th></th>				
+    </tr>
+  </thead>
+  <tbody>
+	${list}
+  </tbody>
+</table>
+</script>
+<script id="campaigns_template_tr" type="text/x-jquery-tmpl">
+<tr class="campaign_class ">
+	<td><a href="http://${slug}.herokuapp.com" target="_blank">visit</a></td>
+  <td class="name">${name}</td>
+  <td class="plan">${plan}</td>
+  <td class="status">${status}</td>
+  <td class="actions">
+		<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
+		<option value="town">town</option>
+		<option value="city">city</option>
+		<option value="country">country</option>
+		<option value="earth">earth</option>
+		<option value="universal">universal</option>
+		</select>
+		<a href="/api/campaigns/${id}" class="btn btn-small btn-danger destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?">delete</a>		
+	</td>			
+</tr>
+</script>
+<script id="campaigns_template_error" type="text/x-jquery-tmpl">
+<div class="alert flash">
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  ${message}
+</div>
+</script>
+<script id="campaigns_template_success" type="text/x-jquery-tmpl">
+<div class="alert alert-success">
+Your campaign is been creating, you will get notification email when it will be online.
+</div>
+</script>

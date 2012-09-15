@@ -1,21 +1,32 @@
-include Campanify    
 class Api::CampaignsController < ApplicationController
   
+  respond_to :json
+  before_filter :authenticate_user!
+  
+  def index
+    render :json => current_user.campaigns.all
+  end
+  
   def create
-    if params[:name] && params[:plan]
-      result = create_app(params[:name],params[:plan]) 
-    else
-      result = {:error => "missing arguments"}
-    end
-    render :json => result
+    respond_with current_user.campaigns.create(params[:campaign]), :location => api_campaigns_path
   end
   
   def update
-    if params[:action] == "migrate_db" && params[:slug] && params[:current_plan] && params[:next_plan]
-      result = migrate_db(params[:slug],params[:current_plan],params[:next_plan])
+    if campaign = current_user.campaigns.find_by_id(params[:id])
+      if campaign.update_attributes(params[:campaign])
+        render :json => campaign
+      else
+        render :json => campaign.errors, :status => :unprocessable_entity
+      end
     else
-      result = {:error => "missing arguments"}
+        render :json => {:errors => "Record Not Found"}
     end
-    render :json => result
+  end
+  
+  def destroy
+    if campaign = current_user.campaigns.find_by_id(params[:id])
+      campaign.destroy
+    end
+    render :json => campaign
   end
 end

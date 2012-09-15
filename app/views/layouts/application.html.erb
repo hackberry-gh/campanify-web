@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>CampanifyWeb</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
-<%= yield %>
-
-</body>
+  <head>
+    <title>Campanify</title>
+  	<%= csrf_meta_tags %>
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  	<%= stylesheet_link_tag    "application", :media => "all" %>
+  </head>
+  <body>
+		<%= render "shared/flash" %>
+		
+		<%= render "shared/navbar" if current_user %>
+		
+		<div class="container-fluid">
+		  <div class="row-fluid">
+		    <div class="span12">
+			
+					<header>
+						<a href="/"><i class="logo-96"></i></a>
+					</header>
+					
+					<section id="main">
+     				<%= yield %>
+					</section>
+					
+					<%= render "shared/footer" %>
+		    </div>
+		  </div>
+		</div>
+		
+		<%= render "shared/campaigns_template" %>
+		
+  	<%= javascript_include_tag "application" %>
+  </body>
 </html>

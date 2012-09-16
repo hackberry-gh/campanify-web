@@ -43,7 +43,7 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: campanify-web_test
+  database: campanify_web_test
   pool: 5
   username: postgres
   password:
@@ -53,9 +53,9 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: campanify-web_production
+  database: campanify_web_production
   pool: 5
-  username: postgres
+  username: campanify_web
   password:
   host: localhost
   port: 5432

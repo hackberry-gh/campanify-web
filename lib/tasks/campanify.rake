@@ -1,4 +1,4 @@
-namespace :campanify do
+namespace :campanify do  
   desc "Creates an App with given name, plan behalf of Campanify Admin"
   task :create_app, [:name, :plan] => :environment do |t, args|
     include Campanify    

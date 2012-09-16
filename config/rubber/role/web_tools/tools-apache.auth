@@ -4,4 +4,4 @@
   pass = rubber_env.web_tools_password || rand(1000000000).to_s
 %>
 
-<%= user %>:<%= pass.crypt(sprintf('%02d', rand(100)))%>
+<%= `htpasswd -nb #{user} #{pass}` %>

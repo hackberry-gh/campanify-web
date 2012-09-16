@@ -13,11 +13,11 @@ module Campanify
   module Plans
     class << self
       def all
-        %w(town city country earth universal)
+        %w(free town city country earth)
       end
       def configuration(plan)
       {
-        town: {
+        free: {
           ps: {
             web: 1,
             worker: 0
@@ -30,6 +30,19 @@ module Campanify
           db: 'heroku-postgresql:dev',          
           price: 0
         },
+        town: {
+          ps: {
+            web: 1,
+            worker: 1
+          },
+          addons: {
+            "pgbackups" => "auto-week",
+            "sendgrid" => "bronze",
+            "memcachier" => "100"
+          },
+          db: 'heroku-postgresql:basic',          
+          price: 139 # 70 + 35 + 9.95 + 15 + 9 = 138.95
+        },
         city: {
           ps: {
             web: 2,
@@ -37,11 +50,11 @@ module Campanify
           },
           addons: {
             "pgbackups" => "auto-week",            
-            "sendgrid" => "bronze",
-            "memcachier" => "100"
+            "sendgrid" => "silver",
+            "memcachier" => "250"
           },
           db: 'heroku-postgresql:crane',
-          price: 17100          
+          price: 369 # 140 + 70 + 79.95 + 25 + 50 = 364.95
         },
         country: {
           ps: {
@@ -50,38 +63,38 @@ module Campanify
           },
           addons: {
             "pgbackups" => "auto-week",            
-            "sendgrid" => "silver",
+            "sendgrid" => "gold",
             "memcachier" => "500"
           },
-          db: 'heroku-postgresql:ronin',
-          price: 62400          
+          db: 'heroku-postgresql:kappa',
+          price: 799 # 280 + 175 + 199.95 + 40 + 100 = 794.95
         },
         earth: {
           ps: {
             web: 8,
-            worker: 2
-          },
-          addons: {
-            "pgbackups" => "auto-week",            
-            "sendgrid" => "gold",
-            "memcachier" => "1000"
-          },
-          db: 'heroku-postgresql:fugu',
-          price: 141800          
-        },
-        universal: {
-          ps: {
-            web: 12,
             worker: 4
           },
           addons: {
             "pgbackups" => "auto-week",            
             "sendgrid" => "platinum",
-            "memcachier" => "2500"
+            "memcachier" => "1000"
           },
-          db: 'heroku-postgresql:ika',
-          price: 242900          
-        }
+          db: 'heroku-postgresql:ronin',
+          price: 1619 # 560 + 385 + 399.95 + 70 + 200 = 1614.95
+        },
+        # universal: {
+        #           ps: {
+        #             web: 12,
+        #             worker: 4
+        #           },
+        #           addons: {
+        #             "pgbackups" => "auto-week",            
+        #             "sendgrid" => "enterprise",
+        #             "memcachier" => "2500"
+        #           },
+        #           db: 'heroku-postgresql:fugu',
+        #           price: #1120 + 525 + ? + 165 + 400
+        #         }
       }[plan]
       end
     end
@@ -148,7 +161,7 @@ module Campanify
 
           file_name = "#{app_dir}/.env"
           content = File.read(file_name)
-          content = content.gsub(/town/, campaign.plan)      
+          content = content.gsub(/free/, campaign.plan)      
           content = content.gsub(/bucket/, "campanify_app_#{slug.underscore}")                
           target_file_name = file_name
           File.open(target_file_name, "w") {|file| file.write content}      
@@ -217,7 +230,7 @@ module Campanify
 
           puts "=== APP CREATION FINISHED AT #{Time.now} ==="                  
           
-          if campaign.plan != "town"
+          if campaign.plan != "free"
             migrate_db(campaign, campaign.plan)
           end
           

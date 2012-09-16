@@ -31,11 +31,11 @@
   <td class="status">${status}</td>
   <td class="actions">
 		<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
+		<option value="free">free</option>		
 		<option value="town">town</option>
 		<option value="city">city</option>
 		<option value="country">country</option>
 		<option value="earth">earth</option>
-		<option value="universal">universal</option>
 		</select>
 		<a href="/api/campaigns/${id}" class="btn btn-small btn-danger destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?">delete</a>		
 	</td>			
@@ -49,6 +49,6 @@
 </script>
 <script id="campaigns_template_success" type="text/x-jquery-tmpl">
 <div class="alert alert-success">
-Your campaign is been creating, you will get notification email when it will be online.
+Your campaign is been creating, it takes several minutes, you can track its status by clicking `My Campaign` above.
 </div>
 </script>

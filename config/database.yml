@@ -15,7 +15,7 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: campanify-web_development
+  database: campanify_web_development
   pool: 5
   username: postgres
   password:

@@ -18,10 +18,10 @@
         <!-- .nav, .navbar-search, .navbar-form, etc -->
 				<ul class="nav">
 				  <li><a href="#my_campaigns" id="my_campaigns">My Campaigns</a></li>	
+				  <li><a href="/pages/plans">Plans</a></li>					
         </ul>
 				<ul class="nav pull-right">
 					<li class="divider-vertical"></li>
-					<li><a>Hello <%= current_user.full_name %></a></li>
           <li><%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>	</li>
         </ul>
       </div>

@@ -3,6 +3,7 @@
 	<% if current_user %>				
  	<%= link_to "Help", "mailto:support@campanify.it" %>						
 	<% else %>
+	<%= link_to "Sign In", new_user_session_path %>	| 
  	<%= link_to "Contact", "mailto:info@campanify.it" %>
 	<% end %>
 </footer>

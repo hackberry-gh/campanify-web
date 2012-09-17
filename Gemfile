@@ -1,8 +1,11 @@
 source 'http://rubygems.org'
 
+
 gem 'rails', 												'3.2.7'
 gem 'pg'
-gem 'thin'
+gem 'foreman'
+# gem 'thin'
+gem 'unicorn'
 gem 'devise'
 gem 'heroku'
 gem 'heroku-api'
@@ -31,8 +34,5 @@ group :test, :development do
 	gem 'rspec-rails', 								'~> 2.11.0'
 	gem 'capybara', 									'~> 1.1.2'
 end
-gem 'rubber'
-gem 'open4'
-gem 'gelf'
-gem 'graylog2_exceptions', :git => 'git://github.com/wr0ngway/graylog2_exceptions.git'
-gem 'graylog2-resque'
+
+gem 'capistrano'

@@ -55,7 +55,7 @@ production:
   encoding: unicode
   database: campanify_web_production
   pool: 5
-  username: campanify_web
+  username: postgres
   password:
   host: localhost
   port: 5432

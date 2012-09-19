@@ -1,0 +1,277 @@
+development: &development
+  # Application Name
+  # ---------------------------------------------  
+  application: Campanify
+  
+  # Modules
+  # ---------------------------------------------  
+  # To enable/disable modules simple add remove them
+  # Available options users, posts, events
+  # needs restart
+  modules:    
+    - analytics
+    - users
+    - posts
+    - events    
+  
+  # Mailer
+  # ---------------------------------------------
+  # application wide mailer settings    
+  mailer:
+    # mails will appear on from field on sent mail
+    sender: noreply@campanify.it  
+    # mails will send from this domain
+    # needs restart
+    host: 'localhost:3000'
+  
+  # User
+  # ---------------------------------------------
+  # Mostly about petition form and other user centered settings  
+  user: &user
+    # Abilities
+    # -------------------------------------------
+    abilities:
+      can_post: true
+      can_comment: true
+      
+    # Fields
+    # -------------------------------------------
+    fields:
+      - email
+      - first_name
+      - last_name
+      # - full_name
+      # - display_name
+      # - birth_year
+      # - birth_date
+      # - country
+      # - region
+      # - city
+      # - address
+      # - post_code
+      # - phone
+      # - mobile_phone 
+      # - newsletter   
+
+    
+    # Options
+    # -------------------------------------------    
+    # uncomment below line to skip checkboxes
+    # options: []    
+    options: 
+      send_updates: true      
+      # legal_aggrement: true
+    
+    # Validations
+    # -------------------------------------------
+    # to make a field mandatory list it below
+    # email is default and can't be removed
+    validates:
+      - first_name
+      - last_name
+    
+    # Password
+    # -------------------------------------------
+    # never(default): never ask for password
+    # always: always ask for password
+    # after_signup: don't ask on signup but ask on signin, 
+    # if you gonna choose after_signup, auto generated password will be set. 
+    # but not send any email to user!!!
+    # so allow user to sign in website, you should add send_reset_password_instructions 
+    # to after_signup_hooks or send it later with custom email with reset password link below
+    # <%= link_to 'Change my password', edit_password_url(@user, :reset_password_token => @user.reset_password_token) %>
+    # after_signup_with_instructions: same as after_signup but sends 
+    # reset password instructions immediately
+    password_required: never
+    
+    # Confirmation
+    # -------------------------------------------
+    # never: never send confirmation email and mark user confirmed!
+    # time_based(default): send confirmation email after signup but allow user to sign in for "devise/allow_unconfirmed_access_for" days
+    # loose: don't send email after signup/update and allow user to sign in for "devise/allow_unconfirmed_access_for" days
+    # strict: send confirmation email after sign up and don't allow user to sign in without confirmation
+    # CAUTION !!! Strict option can't be branched, so if you select strict it rules all branches    
+    confirmation_required: never
+    
+    # Redirection Urls
+    # -------------------------------------------
+    redirects:
+      # can be any url or 'show' to redirect user profile page
+      after_sign_up: show
+      after_post: show
+      after_sign_in: show
+      after_inactive_sign_in: /
+      after_sign_out: /
+      
+    # Hooks
+    # -------------------------------------------
+    hooks:
+      # hooks for after creation
+      # uncomment below line to do nothing
+      # after_create: []
+      after_create: []
+        # sends reset password instructions to user
+        # you should enable this if you choose after_signup for password_required
+        # user: send_reset_password_instructions
+        
+        # or skip sending password instructions and generate reset token, 
+        # so you can avoid sending two emails after signup if you'r planning
+        # to send welcome email, but don't forget to some instructions about
+        # resetting password!
+        # user: generate_reset_password_token
+        
+        # sends after_signup email to user
+        # don't forget change subject and body from translations
+        # user_mailer.after_signup_email.subject
+        # user_mailer.after_signup_email.body
+        # mail: after_signup_email
+        
+        # posts user fields to given url
+        # http_post: http://localhost:5000/users/hooks/http_post
+        
+        # tweets user display name | first name with given message 
+        # to given account's timeline
+        # tweet: 
+        #     username:
+        #     consumer_key:
+        #     consumer_secret:
+        #     oauth_token:
+        #     oauth_token_secret:
+        #     status: t('hooks.after_crate.tweet.status')
+        
+        # posts user display name | first name with given message 
+        # to given target on facebook
+        # targets:  user, user must be signuped via facebook connect
+        #           PAGE_ID, page of given id must authorize the given app
+        # facebook:
+        #     target:
+        #     app_id:
+        #     app_secret:
+        #     message: t('hooks.after_crate.facebook.message')          
+      
+  # Time Zone
+  # ---------------------------------------------  
+  # needs restart
+  timezone: 'Europe/London'
+  
+  # Completed Locales
+  # ---------------------------------------------
+  # enter language code to make available on site
+  # needs restart
+  i18n:
+    default_locale: en
+    available_locales:
+      - en
+    completed_locales:
+      - en  
+    # available options are from_browser, from_branch
+    preferred_source: from_browser  
+    
+  # Branches
+  # ---------------------------------------------
+  # to use general settings for all bracnhes or 
+  # skip branching uncomment below line
+  
+  # branches: []
+  
+  # to customize settings per branch use below settings
+  # unlisted branches will use default user settings set above
+  # branch id must valid ISO 3166-1 alpha-2 country code
+  # country code must valid ISO 3166-1 alpha-2 country code  
+  # adding new branches needs restart
+  # changing timezone needs restart
+  branches:
+    GB:
+      country_code: GB
+      timezone: Europe/London
+      locales:
+        - en
+      user:
+        fields:
+          - email
+        options: []
+        validates: []
+        password_required: never
+        confirmation_required: never
+        redirects:
+          after_sign_up: /pages/thank-you
+          after_post: show
+          after_sign_in: show
+          after_inactive_sign_in: /
+          after_sign_out: /
+        hooks:
+          after_create: []
+                   
+  # Assets        
+  # ---------------------------------------------  
+  assets:
+    # valid options are s3, filesystem
+    # needs restart    
+    host_type: filesystem  
+    
+  # Media
+  # ---------------------------------------------  
+  media:
+    # valid options are fog, file
+    # needs restart
+    storage: file   
+    versions:
+      - name: thumb
+        process: resize_to_fill
+        sizes: [48,48]
+    avatars:
+      default_url:
+        big: "http://placedog.com/g/450/450"
+        thumb: "http://placedog.com/g/96/96"  
+      big:
+        process: resize_to_limit
+        sizes: [450,450]
+      thumb:
+        process: resize_to_fill
+        sizes: [96,96]  
+         
+  # Devise
+  # ---------------------------------------------  
+  # needs restart
+  devise_settings:
+    # value in days
+    allow_unconfirmed_access_for: 365    
+    # value in days
+    reset_password_within: 365
+  
+  # Content
+  # ---------------------------------------------  
+  pages:
+    # Home Page Slug
+    # needs restart    
+    home_page_slug: home
+    
+    # Comments
+    comments: false
+  posts:
+    comments: true 
+  events:
+    comments: true
+  users:
+    comments: false  
+  
+  # Pagination
+  # ---------------------------------------------
+  pagination:
+    per: 10
+  
+  # Facebook
+  # ---------------------------------------------
+  facebook:
+    app_id: "165494140246687"
+    app_secret: "177ff317289b4d7ddb237f7f2945b28b"
+    scope: "email"
+    connect: true
+    
+  # Development Settings
+  # ---------------------------------------------  
+  development:
+    ip: 86.176.176.71
+         
+test: *development
+production: *development

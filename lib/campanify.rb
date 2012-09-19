@@ -115,57 +115,62 @@ module Campanify
         begin
           app_dir = "#{APPS_DIR}/#{slug}"
 
-          mkdir = system("mkdir #{app_dir}")
-          return {error: "APP DIR COULD NOT CREATED", campaign: campaign} unless mkdir
-          puts "=== APP DIR CREATED ==="        
+          # mkdir = system("mkdir #{app_dir}")
+          # return {error: "APP DIR COULD NOT CREATED", campaign: campaign} unless mkdir
+          # puts "=== APP DIR CREATED ==="        
           
           # heroku accounts:set
-          system('git config heroku.account campanify_tech')
-          system("git config remote.heroku.url git@heroku.campanify_tech:#{slug}.git")
-          puts "=== HEROKU ACCOUNT SET ==="                  
+          # system('git config heroku.account campanify_tech')
+          # system("git config remote.heroku.url git@heroku.campanify_tech:#{slug}.git")
+          # puts "=== HEROKU ACCOUNT SET ==="                  
           
-          clone = system("git clone git@heroku.campanify_tech:campanify-app.git #{app_dir} -o heroku")
-          return {error: "GIT REPO COULD NOT CLONNED", campaign: campaign} unless clone
-          puts "=== GIT REPO CLONNED ==="                  
+          # clone = system("git clone git@heroku.campanify_tech:campanify-app.git #{app_dir} -o heroku")
+          # return {error: "GIT REPO COULD NOT CLONNED", campaign: campaign} unless clone
+          # puts "=== GIT REPO CLONNED ==="                  
 
-          file_name = "#{Rails.root}/lib/templates/seeds.rb"
-          content = File.read(file_name)
-          content = content.gsub(/\$name/, campaign.name)
-          content = content.gsub(/\$slug/, campaign.slug)
-          content = content.gsub(/\$admin_email/, campaign.user.email)
-          content = content.gsub(/\$admin_full_name/, campaign.user.full_name)        
-          content = content.gsub(/\$admin_password/, Devise.friendly_token.first(6))            
-          target_file_name = "#{app_dir}/db/seeds.rb"
-          system("touch #{target_file_name}")
-          File.open(target_file_name, "w") {|file| file.write content}
-          puts "=== SEED.RB GENERATED ==="                  
-
-          file_name = "#{Rails.root}/lib/templates/install.sh"
-          content = File.read(file_name)
-          content = content.gsub(/\$app_dir/, app_dir)      
-          content = content.gsub(/\$name/, campaign.name)
-          content = content.gsub(/\$slug/, campaign.slug)
-          target_file_name = "#{app_dir}/install.sh"
-          system("touch #{target_file_name}")      
-          File.open(target_file_name, "w") {|file| file.write content}
-          puts "=== INSTALL.SH GENERATED ==="                  
+          # file_name = "#{Rails.root}/lib/templates/seeds.rb"
+          # content = File.read(file_name)
+          # content = content.gsub(/\$name/, campaign.name)
+          # content = content.gsub(/\$slug/, campaign.slug)
+          # content = content.gsub(/\$admin_email/, campaign.user.email)
+          # content = content.gsub(/\$admin_full_name/, campaign.user.full_name)        
+          # content = content.gsub(/\$admin_password/, Devise.friendly_token.first(6))            
+          # target_file_name = "#{app_dir}/db/seeds.rb"
+          # system("touch #{target_file_name}")
+          # File.open(target_file_name, "w") {|file| file.write content}
+          # puts "=== SEED.RB GENERATED ==="                  
+          # 
+          # file_name = "#{Rails.root}/lib/templates/install.sh"
+          # content = File.read(file_name)
+          # content = content.gsub(/\$app_dir/, app_dir)      
+          # content = content.gsub(/\$name/, campaign.name)
+          # content = content.gsub(/\$slug/, campaign.slug)
+          # target_file_name = "#{app_dir}/install.sh"
+          # system("touch #{target_file_name}")      
+          # File.open(target_file_name, "w") {|file| file.write content}
+          # puts "=== INSTALL.SH GENERATED ==="                  
+          # 
+          # file_name = "#{app_dir}/config/settings.yml"
+          # content = File.read(file_name)
+          # content = content.gsub(/localhost:3000/, "#{slug}.campanify.it")      
+          # content = content.gsub("host_type: filesystem", "host_type: s3")            
+          # content = content.gsub("storage: file", "storage: fog")                  
+          # target_file_name = file_name
+          # File.open(target_file_name, "w") {|file| file.write content}
+          # puts "=== SETTINGS.YML GENERATED ==="                  
+          # 
+          # file_name = "#{app_dir}/.env"
+          # content = File.read(file_name)
+          # content = content.gsub(/free/, campaign.plan)      
+          # content = content.gsub(/bucket/, "campanify_app_#{slug.underscore}")                
+          # target_file_name = file_name
+          # File.open(target_file_name, "w") {|file| file.write content}      
+          # puts "=== .ENV GENERATED ==="     
           
-          file_name = "#{app_dir}/config/settings.yml"
-          content = File.read(file_name)
-          content = content.gsub(/localhost:3000/, "#{slug}.campanify.it")      
-          content = content.gsub("host_type: filesystem", "host_type: s3")            
-          content = content.gsub("storage: file", "storage: fog")                  
-          target_file_name = file_name
-          File.open(target_file_name, "w") {|file| file.write content}
-          puts "=== SETTINGS.YML GENERATED ==="                  
-
-          file_name = "#{app_dir}/.env"
-          content = File.read(file_name)
-          content = content.gsub(/free/, campaign.plan)      
-          content = content.gsub(/bucket/, "campanify_app_#{slug.underscore}")                
-          target_file_name = file_name
-          File.open(target_file_name, "w") {|file| file.write content}      
-          puts "=== .ENV GENERATED ==="      
+          capified = system("cap campanify:clone_app -s slug=#{slug} -s rails_root=#{Rails.root} -s campaign_name='#{campaign.name}' -s campaign_slug=#{slug} -s campaign_user_email=#{campaign.user.email} -s campaign_user_full_name='#{campaign.user.full_name}' -s campaign_user_password=#{Devise.friendly_token.first(6)} -s campaign_plan=#{campaign.plan} -s slug_underscore=#{slug.underscore}") 
+          
+          puts "CAPIFIED #{capified}"
+          # return {error: "APP COULD NOT CREATED", campaign: campaign} unless capified
           
           AWS::S3::Base.establish_connection!(
             :access_key_id     => ENV['AWS_S3_KEY'],
@@ -174,32 +179,42 @@ module Campanify
           AWS::S3::Bucket.create("campanify_app_#{slug.underscore}") 
           puts "=== S3 BUCKET CREATED ==="                 
 
-          chmod = system("cd #{app_dir} && chmod +x install.sh")
-          return {error: "INSTALL SCRIPT COULD NOT COPIED", campaign: campaign} unless chmod
+          # chmod = system("cd #{app_dir} && chmod +x install.sh")
+          # return {error: "INSTALL SCRIPT COULD NOT COPIED", campaign: campaign} unless chmod
 
           # rake = system("cd #{app_dir} && bundle exec rake campanify:setup")
           # return {error: app["name"]} unless rake 
 
-          current_dir = Dir.pwd
-          Dir.chdir(app_dir)
-          install = system("cd #{app_dir} && ./install.sh")
-          return {error: "APP COULD NOT INSTALLED", campaign: campaign} unless install
-          Dir.chdir(current_dir)  
-          puts "=== APP INSTALLED ==="                                    
+          # current_dir = Dir.pwd
+          # Dir.chdir(app_dir)
+          # install = system("cd #{app_dir} && ./install.sh")
+          # return {error: "APP COULD NOT INSTALLED", campaign: campaign} unless install
+          # Dir.chdir(current_dir)  
+          # puts "=== APP INSTALLED ==="                                    
 
           # rm = system("cd #{app_dir} && rm -rf install.sh")
           #       return {error: app["name"]} unless rm
 
-          Hash[File.open("#{app_dir}/.env").read.split("\n").map{|v| v.split("=")}].each do |k,v|
-            system("cd #{app_dir} && bundle exec heroku config:add #{k}=#{v} --app #{slug}")
+          file_name = "#{Rails.root}/lib/templates/env"
+          content = File.read(file_name)
+          content = content.gsub(/free/, campaign.plan)      
+          content = content.gsub(/bucket/, "campanify_app_#{slug.underscore}")
+          Hash[content.split("\n").map{|v| v.split("=")}].each do |k,v|
+            # system("cd #{app_dir} && bundle exec heroku config:add #{k}=#{v} --app #{slug}")
+            heroku.put_config_vars(campaign.slug, k => v)                 
           end
+          
           puts "=== APP CONFIG SETTED ON HEROKU ==="                  
 
-          system("cd #{app_dir} && bundle exec heroku run rake db:migrate --app #{slug} --trace")
-          puts "=== DB MIGRATED ON HEROKU ==="                  
+          setup_db = system("cap campanify:setup_db -s slug=#{slug}")
+          # return {error: "DB COULD NOT SETUP", campaign: campaign} unless setup_db
+          puts "SETUP DB : #{setup_db}"
+
+          # system("cd #{app_dir} && bundle exec heroku run rake db:migrate --app #{slug} --trace")
+          # puts "=== DB MIGRATED ON HEROKU ==="                  
                     
-          system("cd #{app_dir} && bundle exec heroku run rake db:seed --app #{slug} --trace")
-          puts "=== DB SEEDED ON HEROKU ==="                            
+          # system("cd #{app_dir} && bundle exec heroku run rake db:seed --app #{slug} --trace")
+          # puts "=== DB SEEDED ON HEROKU ==="                            
 
           puts "=== HEROKU SETUP STARTED ==="
           # require 'rake'
@@ -297,7 +312,8 @@ module Campanify
           puts "=== NEW DB ADDON CREATED ==="                            
           
           # capture backup of current db
-          system("heroku pgbackups:capture --expire --app #{campaign.slug}")
+          # system("heroku pgbackups:capture --expire --app #{campaign.slug}")
+          system("cap campanify:backup_db -s slug=#{campaign.slug}")
           puts "=== DB BACKUP CAPTURED ==="                            
           
           # get new db url
@@ -309,15 +325,18 @@ module Campanify
           puts "=== DB URL COPIED ==="                            
           
           # TODO: wait for ready
-          waiting = `heroku pg:wait --app #{campaign.slug}`
+          # waiting = `heroku pg:wait --app #{campaign.slug}`
+          waiting = system("cap campanify:wait_db -s slug=#{campaign.slug}")
           puts "=== WAITING FOR NEW DB: #{waiting} ==="
 
           # restore new db from backup
-          system("heroku pgbackups:restore #{target_db} --app #{campaign.slug} --confirm #{campaign.slug}")
+          # system("heroku pgbackups:restore #{target_db} --app #{campaign.slug} --confirm #{campaign.slug}")
+          system("cap campanify:restore_db -s slug=#{campaign.slug} -s target_db=#{target_db}")
           puts "=== DB RESTORED ==="
           
           # promote new db
-          system("heroku pg:promote #{target_db} --app #{campaign.slug}")
+          # system("heroku pg:promote #{target_db} --app #{campaign.slug}")
+          system("cap campanify:promote_db -s slug=#{campaign.slug} -s target_db=#{target_db}")          
           puts "=== DB PROMOTED ==="
           
           # remove old db addon
@@ -351,7 +370,8 @@ module Campanify
         current_config[:addons].each { |addon, plan| heroku.put_addon(campaign.slug, "#{addon}:#{plan}") rescue nil}
         
         # capture backup of current db
-        system("heroku pgbackups:capture --expire --app #{campaign.slug}")
+        # system("heroku pgbackups:capture --expire --app #{campaign.slug}")
+        system("cap campanify:backup_db -s slug=#{campaign.slug}")        
         puts "=== DB BACKUP CAPTURED ==="
         
         # remove next db addon
@@ -362,7 +382,8 @@ module Campanify
         puts "=== EXISTING DB ADDON CREATED ==="
         
         # TODO: wait for ready
-        waiting = `heroku pg:wait --app #{campaign.slug}`
+        # waiting = `heroku pg:wait --app #{campaign.slug}`
+        system("cap campanify:wait_db -s slug=#{campaign.slug}")        
         puts "=== WAITING FOR NEW DB: #{waiting} ==="
         
         # get new db url
@@ -374,12 +395,24 @@ module Campanify
         puts "=== DB URL COPIED ==="
         
         # restore new db from backup
-        system("heroku pgbackups:restore #{target_db} --app #{campaign.slug} --confirm #{campaign.slug}")
+        # system("heroku pgbackups:restore #{target_db} --app #{campaign.slug} --confirm #{campaign.slug}")
+        system("cap campanify:restore_db -s slug=#{campaign.slug} -s target_db=#{target_db}")
         puts "=== DB RESTORED ==="
         
         # promote new db
-        system("heroku pg:promote #{target_db} --app #{campaign.slug}")
+        # system("heroku pg:promote #{target_db} --app #{campaign.slug}")
+        system("cap campanify:promote_db -s slug=#{campaign.slug} -s target_db=#{target_db}")        
         puts "=== DB PROMOTED ==="
+        
+        # get new db url
+        config_vars = heroku.get_config_vars(campaign.slug).body
+        delete_dbs = config_vars.
+                    delete_if{|key,value| !key.include?('POSTGRESQL')}.
+                    delete_if{|key,value| value == config_vars['DATABASE_URL']}.
+                    keys
+        delete_dbs.each do |db|            
+          heroku.delete_addon(campaign.slug, db) rescue nil          
+        end
         
         # remove app from maintenance mode
         heroku.post_app_maintenance(campaign.slug, 0)
@@ -410,7 +443,8 @@ module Campanify
   
   def destroy_app(slug)
     if slug
-      system "rm -rf #{APPS_DIR}/#{slug}"
+      # system "rm -rf #{APPS_DIR}/#{slug}"
+      system("cap campanify:remove_app -s slug=#{slug}")
       heroku.delete_app(slug) rescue nil
       AWS::S3::Base.establish_connection!(
           :access_key_id     => ENV['AWS_S3_KEY'],

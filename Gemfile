@@ -34,3 +34,4 @@ group :test, :development do
 end
 
 gem 'capistrano'
+gem 'rvm-capistrano'

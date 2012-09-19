@@ -104,6 +104,7 @@ namespace :campanify do
     run "cd #{app_dir} && source $HOME/.bashrc && rvm gemset use campanify"
     run "cd #{app_dir} && git remote rm heroku"
     run "cd #{app_dir} && git remote add heroku git@heroku.com:#{slug}.git"           
+    run "cd #{app_dir} && git remote add origin git@heroku.com:campanify-app.git"               
     #git config heroku.account campanify_tech
     #git config remote.heroku.url git@heroku.campanify_tech:$slug.git
     run "cd #{app_dir} && source $HOME/.bashrc && bundle"
@@ -144,5 +145,11 @@ namespace :campanify do
   task :remove_app, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
     run "rm -rf #{app_dir}"
+  end
+  
+  task :update_app, :roles => :campanify do
+    app_dir = "/home/campanify/apps/#{slug}"    
+    run "cd #{app_dir} && git pull origin master"    
+    run "cd #{app_dir} && git push heroku master"    
   end
 end

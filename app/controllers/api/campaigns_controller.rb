@@ -4,7 +4,7 @@ class Api::CampaignsController < ApplicationController
   before_filter :authenticate_user!
   
   def index
-    render :json => current_user.campaigns.all
+    render :json => current_user.campaigns.all.to_json(:methods => :price)
   end
   
   def create

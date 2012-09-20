@@ -37,11 +37,13 @@ $(document).ready(function(){
 			for (var i in data) {
 				var campaign = data[i],
 						campaign_class = campaign.status == "online" ? "success" : "warning";
+						console.log(campaign)
 				list += campaigns_tr.
 								replace(/\${slug}/g, campaign.slug).
 								replace(/\${name}/g, campaign.name).
 								replace(/\${plan}/g, campaign.plan).
 								replace(/\${status}/g, campaign.status).
+								replace(/\${price}/g, campaign.price).								
 								replace(/\${id}/g, campaign.id);
 			}
 			

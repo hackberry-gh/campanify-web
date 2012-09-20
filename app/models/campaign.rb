@@ -18,6 +18,10 @@ class Campaign < ActiveRecord::Base
     self.update_column(:status, status)
   end
   
+  def price
+    Campanify::Plans.configuration(plan.to_sym)[:price]
+  end
+  
   private
     
   def set_slug

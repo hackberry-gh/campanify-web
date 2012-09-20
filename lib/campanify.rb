@@ -27,7 +27,8 @@ module Campanify
             "sendgrid" => "starter",
             "memcachier" => "dev"
           },
-          db: 'heroku-postgresql:dev',          
+          db: 'heroku-postgresql:dev',    
+          campanify_fee: 0,                                           
           price: 0
         },
         town: {
@@ -40,7 +41,8 @@ module Campanify
             "sendgrid" => "bronze",
             "memcachier" => "100"
           },
-          db: 'heroku-postgresql:basic',          
+          db: 'heroku-postgresql:basic',     
+          campanify_fee: 70,                                          
           price: 139 # 70 + 35 + 9.95 + 15 + 9 = 138.95
         },
         city: {
@@ -54,6 +56,7 @@ module Campanify
             "memcachier" => "250"
           },
           db: 'heroku-postgresql:crane',
+          campanify_fee: 140,                                     
           price: 369 # 140 + 70 + 79.95 + 25 + 50 = 364.95
         },
         country: {
@@ -67,6 +70,7 @@ module Campanify
             "memcachier" => "500"
           },
           db: 'heroku-postgresql:kappa',
+          campanify_fee: 280,                                     
           price: 799 # 280 + 175 + 199.95 + 40 + 100 = 794.95
         },
         earth: {
@@ -80,6 +84,7 @@ module Campanify
             "memcachier" => "1000"
           },
           db: 'heroku-postgresql:ronin',
+          campanify_fee: 560,                                     
           price: 1619 # 560 + 385 + 399.95 + 70 + 200 = 1614.95
         },
         # universal: {

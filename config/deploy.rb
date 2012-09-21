@@ -118,28 +118,28 @@ namespace :campanify do
   
   task :setup_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:migrate"
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed"
+    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:migrate --app #{slug}"
+    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed --app #{slug}"
   end
   
   task :backup_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pgbackups:capture --expire"
+    run "cd #{app_dir} && source $HOME/.bashrc && heroku pgbackups:capture --expire --app #{slug}"
   end
   
   task :wait_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pg:wait"
+    run "cd #{app_dir} && source $HOME/.bashrc && heroku pg:wait --app #{slug}"
   end  
   
   task :restore_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pgbackups:restore #{target_db} --confirm #{slug}"
+    run "cd #{app_dir} && source $HOME/.bashrc && heroku pgbackups:restore #{target_db} --confirm #{slug} --app #{slug}"
   end
   
   task :promote_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pg:promote #{target_db}"
+    run "cd #{app_dir} && source $HOME/.bashrc && heroku pg:promote #{target_db} --app #{slug}"
   end  
   
   task :remove_app, :roles => :campanify do

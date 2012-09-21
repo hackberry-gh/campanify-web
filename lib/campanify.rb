@@ -354,14 +354,15 @@ module Campanify
           
           # remove old db addon
           # if current_config[:db] != config[:db]
-            old_dbs = config_vars.
-                      delete_if{|key,value| !key.include?('POSTGRESQL')}.
-                      delete_if{|key,value| value != config_vars['DATABASE_URL']}.
-                      keys          
-            old_dbs.each do |old_db|          
-              heroku.delete_addon(campaign.slug, old_db) rescue nil
-            end
-            puts "=== OLD DB ADDON REMOVED ==="
+          config_vars = heroku.get_config_vars(campaign.slug).body
+          old_dbs = config_vars.clone.
+                    delete_if{|key,value| !key.include?('POSTGRESQL')}.
+                    delete_if{|key,value| value != config_vars['DATABASE_URL']}.
+                    keys          
+          old_dbs.each do |old_db|          
+            heroku.delete_addon(campaign.slug, old_db) rescue nil
+          end
+          puts "=== OLD DB ADDON REMOVED ==="
           # end
           
           # remove app from maintenance mode
@@ -409,7 +410,7 @@ module Campanify
         
         # get new db url
         config_vars = heroku.get_config_vars(campaign.slug).body
-        target_db = config_vars.
+        target_db = config_vars.clone.
                     delete_if{|key,value| !key.include?('POSTGRESQL')}.
                     delete_if{|key,value| value == config_vars['DATABASE_URL']}.
                     keys.first
@@ -427,7 +428,7 @@ module Campanify
         
         # get new db url
         config_vars = heroku.get_config_vars(campaign.slug).body
-        delete_dbs = config_vars.
+        delete_dbs = config_vars.clone.
                     delete_if{|key,value| !key.include?('POSTGRESQL')}.
                     delete_if{|key,value| value == config_vars['DATABASE_URL']}.
                     keys

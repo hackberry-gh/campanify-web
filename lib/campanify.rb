@@ -311,7 +311,7 @@ module Campanify
 
           # add new db addon
           heroku.delete_addon(campaign.slug, config[:db]) rescue nil
-          # puts "=== EXISTING DB ADDON REMOVED ==="                            
+          puts "=== EXISTING DB ADDON REMOVED ==="                            
           
           heroku.post_addon(campaign.slug, config[:db]) rescue nil
           puts "=== NEW DB ADDON CREATED ==="                            
@@ -345,8 +345,10 @@ module Campanify
           puts "=== DB PROMOTED ==="
           
           # remove old db addon
-          heroku.delete_addon(campaign.slug, current_config[:db]) rescue nil
-          puts "=== OLD DB ADDON REMOVED ==="
+          if current_config[:db] != config[:db]
+            heroku.delete_addon(campaign.slug, current_config[:db]) rescue nil
+            puts "=== OLD DB ADDON REMOVED ==="
+          end
           
           # remove app from maintenance mode
           heroku.post_app_maintenance(campaign.slug, 0)

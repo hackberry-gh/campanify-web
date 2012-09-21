@@ -15,24 +15,6 @@
 .flash{
 	margin:0 !important;
 }
-.container-fluid{
-	text-align:center;
-}
-.logo-96{
-	background:url('<%= image_path "campanify-logo-96.png" %>');
-	width:193px;
-	height:97px;
-	display:inline-block;
-}
-.logo-48{
-	background:url('<%= image_path "campanify-logo-48.png" %>');
-	width:36px;
-	height:48px;
-	display:inline-block;
-}
-header{
-	margin:24px 0;
-}
 .campaign_plan_small{
 	margin-bottom: 1px;height: 26px;line-height: 26px;
 }
@@ -42,7 +24,103 @@ label[for=user_remember_me]{
 select#campaign_plan{
 	width:140px;
 }
-/*header .logo-96{
-	display:block;
-	margin:0 auto;
-}*/
+
+body{
+	background:#272727;
+	padding:0;
+}
+.page{
+	background:#F5F5F5;
+}
+.container-fluid{
+	text-align:center;
+	padding:0;
+}
+.logo-96{
+	background:url('../images/campanify-logo-96.png');
+	width:193px;
+	height:97px;
+	display:inline-block;
+}
+header{
+	padding:12px 0;
+}
+.page{
+	padding-bottom:12px;
+}
+footer.span12{
+	padding:12px 0 !important;
+	color:#F5F5F5;
+	margin:0 !important;
+	width:100% !important;
+}
+a, a:hover, a:active, a:visited{
+	color:#BD2A29;
+}
+
+
+/* Large desktop */
+@media (min-width: 1200px) { 
+	body{
+		padding:0;
+	}	
+	.container-fluid{
+		text-align:center;
+		padding:0;
+	}
+}
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { 
+	body{
+		padding:0;
+	}	
+	.container-fluid{
+		text-align:center;
+		padding:0;
+	}
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
+	body{
+		padding:0;
+	}
+	.container-fluid{
+		text-align:center;
+		padding:0;
+	}
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) { 
+	body{
+		font-size:0.8em;
+		padding:0;		
+	}
+	input{
+		font-size:12px !important;
+	}
+}
+
+@media (max-width: 240px) { 
+	.container-fluid{
+		text-align:center;
+		padding:0;
+	}
+	body{
+		font-size:0.6em;
+		padding:0;
+	}
+	input{
+		font-size:10px !important;
+		padding-left: 2px !important;
+		padding-right: 2px !important;
+	}
+	.email.span2{
+		width: 100px;
+	}
+	h1{
+		font-size:26px;
+	}
+}

@@ -310,10 +310,12 @@ module Campanify
           # ============
 
           # add new db addon
-          heroku.delete_addon(campaign.slug, config[:db]) rescue nil
-          puts "=== EXISTING DB ADDON REMOVED ==="                            
+          # heroku.delete_addon(campaign.slug, config[:db]) rescue nil
+          # puts "=== EXISTING DB ADDON REMOVED ==="                            
           
-          heroku.post_addon(campaign.slug, config[:db]) rescue nil
+          r = heroku.post_addon(campaign.slug, config[:db]) rescue nil
+          r.body["message"].match(/\HEROKU_POSTGRESQL_+(.*)\_URL/)
+          target_db = "HEROKU_POSTGRESQL_#{$1}_URL"
           puts "=== NEW DB ADDON CREATED ==="                            
           
           # capture backup of current db
@@ -321,13 +323,19 @@ module Campanify
           system("cap campanify:backup_db -s slug=#{campaign.slug}")
           puts "=== DB BACKUP CAPTURED ==="                            
           
+          # remove oldish dbs
+          # current_dbs = config_vars.
+          #             delete_if{|key,value| !key.include?('POSTGRESQL')}.
+          #             delete_if{|key,value| value != config_vars['DATABASE_URL']}.
+          #             keys
+          
           # get new db url
-          config_vars = heroku.get_config_vars(campaign.slug).body
-          target_db = config_vars.
-                      delete_if{|key,value| !key.include?('POSTGRESQL')}.
-                      delete_if{|key,value| value == config_vars['DATABASE_URL']}.
-                      keys.first
-          puts "=== DB URL COPIED ==="                            
+          # config_vars = heroku.get_config_vars(campaign.slug).body
+          # target_db = config_vars.
+          #             delete_if{|key,value| !key.include?('POSTGRESQL')}.
+          #             delete_if{|key,value| value == config_vars['DATABASE_URL']}.
+          #             keys.first            
+          # puts "=== DB URL COPIED ==="                            
           
           # TODO: wait for ready
           # waiting = `heroku pg:wait --app #{campaign.slug}`
@@ -345,10 +353,16 @@ module Campanify
           puts "=== DB PROMOTED ==="
           
           # remove old db addon
-          if current_config[:db] != config[:db]
-            heroku.delete_addon(campaign.slug, current_config[:db]) rescue nil
+          # if current_config[:db] != config[:db]
+            old_dbs = config_vars.
+                      delete_if{|key,value| !key.include?('POSTGRESQL')}.
+                      delete_if{|key,value| value != config_vars['DATABASE_URL']}.
+                      keys          
+            old_dbs.each do |old_db|          
+              heroku.delete_addon(campaign.slug, old_db) rescue nil
+            end
             puts "=== OLD DB ADDON REMOVED ==="
-          end
+          # end
           
           # remove app from maintenance mode
           heroku.post_app_maintenance(campaign.slug, 0)

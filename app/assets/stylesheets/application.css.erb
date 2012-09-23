@@ -8,119 +8,94 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require_self
  *= require bootstrap
  *= require bootstrap-responsive
+ *= require_self
  */
-.flash{
-	margin:0 !important;
-}
-.campaign_plan_small{
-	margin-bottom: 1px;height: 26px;line-height: 26px;
-}
-label[for=user_remember_me]{
-	display:inline-block;
-}
-select#campaign_plan{
-	width:140px;
-}
 
-body{
-	background:#272727;
-	padding:0;
-}
-.page{
-	background:#F5F5F5;
-}
-.container-fluid{
-	text-align:center;
-	padding:0;
-}
 .logo-96{
-	background:url('../images/campanify-logo-96.png');
+	background:url('<%= image_path "campanify-logo-96.png" %>');
 	width:193px;
 	height:97px;
 	display:inline-block;
 }
-header{
-	padding:12px 0;
+.logo-48{
+	background:url('<%= image_path "campanify-logo-48.png" %>');
+	width:36px;
+	height:48px;
+	display:inline-block;
 }
-.page{
-	padding-bottom:12px;
+.btn-primary {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #da4f49;
+  *background-color: #bd362f;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+  background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+  background-repeat: repeat-x;
+  border-color: #bd362f #bd362f #802420;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
+  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
 }
-footer.span12{
-	padding:12px 0 !important;
-	color:#F5F5F5;
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  color: #ffffff;
+  background-color: #bd362f;
+  *background-color: #a9302a;
+}
+.flash{
 	margin:0 !important;
-	width:100% !important;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
 }
-a, a:hover, a:active, a:visited{
+a, a:hover, a:visited, a:active {
 	color:#BD2A29;
 }
 
-
-/* Large desktop */
-@media (min-width: 1200px) { 
-	body{
-		padding:0;
-	}	
-	.container-fluid{
-		text-align:center;
-		padding:0;
-	}
+.welcome body{
+	background: #272727;
+}
+/*.application, .application body, .application .container-fluid, .application .row-fluid, .application .sidebar{
+	height:100%;
+}*/
+/*body{
+	padding-left: 0;
+	padding-right: 0;	
+}*/
+/*.container-fluid{
+	padding-left: 0;
+	padding-right: 0;
+}*/
+.page{
+	background: #FFF;
+}
+.welcome .main{
+	padding-top: 40px;
+	text-align: center;
+}
+/*.sidebar{
+	border-right:1px solid #F5F5F5;
+}*/
+footer{
+	text-align:center;
+}
+.change_campaign_plan{
+	vertical-align:top;
+	height:27px;
 }
 
-/* Portrait tablet to landscape and desktop */
-@media (min-width: 768px) and (max-width: 979px) { 
-	body{
-		padding:0;
-	}	
-	.container-fluid{
-		text-align:center;
-		padding:0;
-	}
-}
-
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px) { 
-	body{
-		padding:0;
-	}
-	.container-fluid{
-		text-align:center;
-		padding:0;
-	}
-}
-
-/* Landscape phones and down */
-@media (max-width: 480px) { 
-	body{
-		font-size:0.8em;
-		padding:0;		
-	}
-	input{
-		font-size:12px !important;
-	}
-}
-
-@media (max-width: 240px) { 
-	.container-fluid{
-		text-align:center;
-		padding:0;
-	}
-	body{
-		font-size:0.6em;
-		padding:0;
-	}
-	input{
-		font-size:10px !important;
-		padding-left: 2px !important;
-		padding-right: 2px !important;
-	}
-	.email.span2{
-		width: 100px;
-	}
-	h1{
-		font-size:26px;
-	}
+/* SIGN IN */
+.remember_me{
+	display: inline-block;
+	margin-right: 30px;
+	position: relative;
+	top: 2px;
 }

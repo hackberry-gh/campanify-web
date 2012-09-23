@@ -1,6 +1,7 @@
 <footer class="span12">
-	<hr/>		
+	<br/>
 	<% if current_user %>				
+	<%= link_to "Sign Out", destroy_user_session_path, :method => :delete %> | 
  	<%= link_to "Help", "mailto:support@campanify.it" %>						
 	<% else %>
 	<%= link_to "Sign In", new_user_session_path %>	| 

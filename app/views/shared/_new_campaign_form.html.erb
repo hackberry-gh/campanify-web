@@ -1,0 +1,11 @@
+<%= form_for Campaign.new, 
+:remote => true, 
+:url => api_campaigns_path,
+:html => {
+	:class => "form"
+} do |f| %>
+	<legend>Create your campaign and spread your word now.</legend>	
+	<%= f.text_field :name, :placeholder => "Name of Your Campaign" %>
+	<%= f.select :plan, Campanify::Plans.all, :include_blank => "Select your plan" %>
+  <button type="submit" class="btn btn-primary" style="margin-bottom:9px">Start!</button>
+<% end %>

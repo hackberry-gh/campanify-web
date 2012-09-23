@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html class="application">
+<html class="welcome">
   <head>
     <title>Campanify</title>
   	<%= csrf_meta_tags %>
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   	<%= stylesheet_link_tag    "application", :media => "all" %>
   </head>
-  <body>
+  <body class="welcome">
 	
 		<div class="container-fluid">
 		  <div class="page row-fluid">
-		    <div class="sidebar span3">
-		      <%= render "shared/sidebar" %>
-		    </div>
-		    <div class="main span9">
+		    <div class="main span12">
+					<a href="/"><i class="logo-96"></i></a>
+					<br/>
+					<br/>
 		      <%= yield %>
 		    </div>
 		  </div>
+			<div class="row-fluid">
+				<%= render "shared/footer" %>		
+			</div>		
 		</div>
 		
-		<%= render "shared/campaigns_template" %>
   	<%= javascript_include_tag "application" %>
   </body>
 </html>

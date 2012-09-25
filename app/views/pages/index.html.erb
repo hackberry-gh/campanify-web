@@ -1,25 +1,9 @@
 <% unless current_user %>
 
-<h1>Hello, Campaigner!</h1>
-
-<p>Our website is launching very soon.<br/>
-Leave us your email below, and we’ll notify the minute we open the doors.</p>	
-
-<form action="http://campanify.us5.list-manage.com/subscribe/post?u=e1342de935a1b7b5938d3f4d5&amp;id=93e20d7f3d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-
-	<div class="input-append">
-		<input type="email" value="" name="EMAIL" class="email span4" id="mce-EMAIL" placeholder="email address">
-		<input type="submit" value="Keep Me Updated" name="subscribe" id="mc-embedded-subscribe" class="btn">
-	</div>
-	
-</form>
-
-<br/>
+<%= render "welcome" %>
 
 <% else %>
 
-<h1>Let's make the world more peaceful place</h1>
-
-<%= render "shared/new_campaign_form" %>
+<%= render "new_campaign" %>
 
 <% end %>

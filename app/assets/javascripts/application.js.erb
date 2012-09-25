@@ -49,10 +49,7 @@ $(document).ready(function(){
 	});
 	}
 	
-	$.newCampaign = function() {
-		var tmpl = $("#campaigns_template_new").html();
-		$(".main").html(tmpl);
-	}
+	
 	$.myCampaigns = function() {
 			$.get("/api/campaigns", function (data) {
 
@@ -75,7 +72,7 @@ $(document).ready(function(){
 				}
 
 				campaigns_table = campaigns_table.replace(/\${list}/, list );
-				if (data.length == 0) campaigns_table = "<p>No apps found</p>"; 
+				if (data.length == 0) campaigns_table = "<h1>No apps found</h1>"; 
 
 				// modal.find(".modal-body").html(campaigns_table);
 				$(".main").html(campaigns_table);
@@ -119,19 +116,40 @@ $(document).ready(function(){
 		
 	}
 	
+	$("#menu").data("off", false);
+	
+	$.toggleMenu = function(){
+		$("#menu li:not(.nav-header)").toggle();
+		$("#menu").data("off", !$("#menu").data("off") );
+	}
+	
+	$.onResize = function(){
+		var w = $(window).width();
+		if( w > 767 && $("#menu").data("off") == true ){
+			$("#menu li:not(.nav-header)").show();
+			$("#menu").data("off", false);
+			$("#menu .nav-header").unbind('click');		
+		}else if ( w <= 767 && $("#menu").data("off") == false  ) {
+			$("#menu li:not(.nav-header)").hide();
+			$("#menu").data("off", true);	
+			$("#menu .nav-header").click($.toggleMenu);				
+		}
+	}
+	
+	$(window).resize($.onResize);	
+	
+	$.onResize();
+	
 	$("#menu a").click(function(){
 
 		var href = $(this).attr("href");
-		$(".main").html("loading...");
+		$(".main").html("<div class=\"loading\"><img src=\"<%= image_path("ajax-preloader.gif") %>\"></div>");
 		switch(href){
-			case "#new_campaign":
-			$.newCampaign();
-			break;
 			case "#my_campaigns":
 			$.myCampaigns();
 			break;
 			default:
-			return true;
+			$(".main").load(href.replace("#",""));
 			break;
 		}
 

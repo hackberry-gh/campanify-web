@@ -143,7 +143,11 @@ $(document).ready(function(){
 	$("#menu a").click(function(){
 
 		var href = $(this).attr("href");
+		
+		if(!href.indexOf("#")) return true;
+		
 		$(".main").html("<div class=\"loading\"><img src=\"<%= image_path("ajax-loader.gif") %>\"></div>");
+		
 		switch(href){
 			case "#my_campaigns":
 			$.myCampaigns();

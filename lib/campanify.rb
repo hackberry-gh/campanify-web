@@ -25,7 +25,8 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",
             "sendgrid" => "starter",
-            "memcachier" => "dev"
+            "memcachier" => "dev",
+            "newrelic" => "standard"
           },
           db: 'heroku-postgresql:dev',    
           campanify_fee: 0,                                           
@@ -39,7 +40,8 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",
             "sendgrid" => "bronze",
-            "memcachier" => "100"
+            "memcachier" => "100",
+            "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:basic',     
           campanify_fee: 70,                                          
@@ -53,7 +55,8 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",            
             "sendgrid" => "silver",
-            "memcachier" => "250"
+            "memcachier" => "250",
+            "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:crane',
           campanify_fee: 140,                                     
@@ -67,7 +70,8 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",            
             "sendgrid" => "gold",
-            "memcachier" => "500"
+            "memcachier" => "500",
+            "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:kappa',
           campanify_fee: 280,                                     
@@ -81,7 +85,8 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",            
             "sendgrid" => "platinum",
-            "memcachier" => "1000"
+            "memcachier" => "1000",
+            "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:ronin',
           campanify_fee: 560,                                     

@@ -152,4 +152,9 @@ namespace :campanify do
     run "cd #{app_dir} && git pull origin master"    
     run "cd #{app_dir} && git push heroku master"    
   end
+  
+  task :push_app, :roles => :campanify do
+    app_dir = "/home/campanify/apps/#{slug}"    
+    run "cd #{app_dir} && git push heroku master"    
+  end
 end

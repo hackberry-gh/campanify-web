@@ -218,17 +218,23 @@ development: &development
     versions:
       - name: thumb
         process: resize_to_fill
-        sizes: [48,48]
+        sizes: 
+          - 48
+          - 48
     avatars:
       default_url:
         big: "http://placedog.com/g/450/450"
         thumb: "http://placedog.com/g/96/96"  
       big:
         process: resize_to_limit
-        sizes: [450,450]
+        sizes: 
+          - 450
+          - 450
       thumb:
         process: resize_to_fill
-        sizes: [96,96]  
+        sizes: 
+          - 96
+          - 96
          
   # Devise
   # ---------------------------------------------  

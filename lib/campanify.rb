@@ -213,6 +213,9 @@ module Campanify
             # system("cd #{app_dir} && bundle exec heroku config:add #{k}=#{v} --app #{slug}")
             heroku.put_config_vars(campaign.slug, k => v)                 
           end
+          # maintenance and error pages
+          heroku.put_config_vars(campaign.slug, "ERROR_PAGE_URL" => "http://static.campanify.it/errors/500.html") 
+          heroku.put_config_vars(campaign.slug, "MAINTENANCE_PAGE_URL" => "http://static.campanify.it/errors/maintenance.html")                                     
           
           puts "=== APP CONFIG SETTED ON HEROKU ==="                  
 

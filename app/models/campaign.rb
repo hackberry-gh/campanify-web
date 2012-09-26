@@ -23,10 +23,14 @@ class Campaign < ActiveRecord::Base
   #     Campanify::Plans.configuration(plan.to_sym)[:price]
   #   end
   def price
-    addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}
-    ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
-    campanify_price = Campanify::Plans.configuration(plan.to_sym)[:campanify_fee]
-    addon_price + ps_price + campanify_price
+    self.status != PENDING
+      addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}
+      ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
+      campanify_price = Campanify::Plans.configuration(plan.to_sym)[:campanify_fee]
+      addon_price + ps_price + campanify_price
+    else
+      0
+    end
   end
   
   private
@@ -36,18 +40,18 @@ class Campaign < ActiveRecord::Base
   end
   
   def create_app
-    self.update_column(:status, Campaign::PENDING)    
+    self.update_column(:status, PENDING)    
     Delayed::Job.enqueue(Jobs::CreateApp.new(self.slug))
   end
   
   def destroy_app
-    self.update_column(:status, Campaign::PENDING)    
+    self.update_column(:status, PENDING)    
     Jobs::DestroyApp.new(self.slug).perform
   end
   
   def change_plan    
     if self.plan_was != self.plan && self.status == ONLINE
-      self.update_column(:status, Campaign::PENDING)      
+      self.update_column(:status, PENDING)      
       Delayed::Job.enqueue(Jobs::ChangePlan.new(self.slug, self.plan))
       self.plan = self.plan_was
     end

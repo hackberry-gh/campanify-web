@@ -144,7 +144,7 @@ $(document).ready(function(){
 
 		var href = $(this).attr("href");
 		
-		if(!href.indexOf("#")) return true;
+		if(!(href.indexOf("#") > -1)) return true;
 		
 		$(".main").html("<div class=\"loading\"><img src=\"<%= image_path("ajax-loader.gif") %>\"></div>");
 		

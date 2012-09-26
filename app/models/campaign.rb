@@ -1,4 +1,5 @@
 class Campaign < ActiveRecord::Base
+  include Campanify::Heroku
   
   ONLINE        = "online"
   MAINTENANCE   = "maintenance"
@@ -18,8 +19,14 @@ class Campaign < ActiveRecord::Base
     self.update_column(:status, status)
   end
   
+  # def price
+  #     Campanify::Plans.configuration(plan.to_sym)[:price]
+  #   end
   def price
-    Campanify::Plans.configuration(plan.to_sym)[:price]
+    addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}
+    ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
+    campanify_price = Campanify::Plans.configuration(plan.to_sym)[:campanify_fee]
+    addon_price + ps_price + campanify_price
   end
   
   private

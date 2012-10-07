@@ -28,4 +28,14 @@ module Jobs
       # page_sysadmin_in_the_middle_of_the_night
     end
   end
+  
+  class ChangeTheme < Struct.new(:slug, :theme)
+    include Campanify      
+    def perform      
+      puts change_theme(slug, theme)
+    end
+    def failure
+      # page_sysadmin_in_the_middle_of_the_night
+    end
+  end
 end

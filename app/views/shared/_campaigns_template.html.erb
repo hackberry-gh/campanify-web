@@ -22,6 +22,7 @@
   <td class="name">${name}</td>
   <td class="plan">${plan}</td>
   <td class="status">${status}</td>
+  <td class="theme">${theme}</td>
   <td class="price">${price}</td>
   <td class="actions">
 		<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
@@ -31,6 +32,10 @@
 		<option value="country">country</option>
 		<option value="earth">earth</option>
 		</select>
+		<select class="change_campaign_theme input input-small campaign_theme_small" data-id="${id}">
+		<option value="default">default</option>		
+		<option value="naked">naked</option>
+		</select>		
 		<a href="/api/campaigns/${id}" class="btn btn-small btn-danger destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?">delete</a>		
 	</td>			
 </tr>

@@ -1,6 +1,3 @@
-# require 'heroku_api'
-# require 'rake'
-
 module Campanify
 
   module Heroku
@@ -86,20 +83,7 @@ module Campanify
           },
           db: 'heroku-postgresql:ronin',
           campanify_fee: 56000
-        },
-        # universal: {
-        #           ps: {
-        #             web: 12,
-        #             worker: 4
-        #           },
-        #           addons: {
-        #             "pgbackups" => "auto-week",            
-        #             "sendgrid" => "enterprise",
-        #             "memcachier" => "2500"
-        #           },
-        #           db: 'heroku-postgresql:fugu',
-        #           price: #1120 + 525 + ? + 165 + 400
-        #         }
+        }
       }[plan]
       end
     end
@@ -119,64 +103,14 @@ module Campanify
         puts "=== APP CREATED #{slug} ==="        
         begin
           app_dir = "#{APPS_DIR}/#{slug}"
-
-          # mkdir = system("mkdir #{app_dir}")
-          # return {error: "APP DIR COULD NOT CREATED", campaign: campaign} unless mkdir
-          # puts "=== APP DIR CREATED ==="        
           
-          # heroku accounts:set
-          # system('git config heroku.account campanify_tech')
-          # system("git config remote.heroku.url git@heroku.campanify_tech:#{slug}.git")
-          # puts "=== HEROKU ACCOUNT SET ==="                  
-          
-          # clone = system("git clone git@heroku.campanify_tech:campanify-app.git #{app_dir} -o heroku")
-          # return {error: "GIT REPO COULD NOT CLONNED", campaign: campaign} unless clone
-          # puts "=== GIT REPO CLONNED ==="                  
-
-          # file_name = "#{Rails.root}/lib/templates/seeds.rb"
-          # content = File.read(file_name)
-          # content = content.gsub(/\$name/, campaign.name)
-          # content = content.gsub(/\$slug/, campaign.slug)
-          # content = content.gsub(/\$admin_email/, campaign.user.email)
-          # content = content.gsub(/\$admin_full_name/, campaign.user.full_name)        
-          # content = content.gsub(/\$admin_password/, Devise.friendly_token.first(6))            
-          # target_file_name = "#{app_dir}/db/seeds.rb"
-          # system("touch #{target_file_name}")
-          # File.open(target_file_name, "w") {|file| file.write content}
-          # puts "=== SEED.RB GENERATED ==="                  
-          # 
-          # file_name = "#{Rails.root}/lib/templates/install.sh"
-          # content = File.read(file_name)
-          # content = content.gsub(/\$app_dir/, app_dir)      
-          # content = content.gsub(/\$name/, campaign.name)
-          # content = content.gsub(/\$slug/, campaign.slug)
-          # target_file_name = "#{app_dir}/install.sh"
-          # system("touch #{target_file_name}")      
-          # File.open(target_file_name, "w") {|file| file.write content}
-          # puts "=== INSTALL.SH GENERATED ==="                  
-          # 
-          # file_name = "#{app_dir}/config/settings.yml"
-          # content = File.read(file_name)
-          # content = content.gsub(/localhost:3000/, "#{slug}.campanify.it")      
-          # content = content.gsub("host_type: filesystem", "host_type: s3")            
-          # content = content.gsub("storage: file", "storage: fog")                  
-          # target_file_name = file_name
-          # File.open(target_file_name, "w") {|file| file.write content}
-          # puts "=== SETTINGS.YML GENERATED ==="                  
-          # 
-          # file_name = "#{app_dir}/.env"
-          # content = File.read(file_name)
-          # content = content.gsub(/free/, campaign.plan)      
-          # content = content.gsub(/bucket/, "campanify_app_#{slug.underscore}")                
-          # target_file_name = file_name
-          # File.open(target_file_name, "w") {|file| file.write content}      
-          # puts "=== .ENV GENERATED ==="     
-          
+          # capistrano recipe to clone bare campaign app and setup on heroku
           capified = system("cap campanify:clone_app -s slug=#{slug} -s rails_root=#{Rails.root} -s campaign_name='#{campaign.name}' -s campaign_slug=#{slug} -s campaign_user_email=#{campaign.user.email} -s campaign_user_full_name='#{campaign.user.full_name}' -s campaign_user_password=#{Devise.friendly_token.first(6)} -s campaign_plan=#{campaign.plan} -s slug_underscore=#{slug.underscore}") 
           
-          puts "CAPIFIED #{capified}"
+          puts "=== CAPIFIED #{capified} ==="
           # return {error: "APP COULD NOT CREATED", campaign: campaign} unless capified
           
+          # create s3 bucket per campaign
           AWS::S3::Base.establish_connection!(
             :access_key_id     => ENV['AWS_S3_KEY'],
             :secret_access_key => ENV['AWS_S3_SECRET']
@@ -184,56 +118,30 @@ module Campanify
           AWS::S3::Bucket.create("campanify_app_#{slug.underscore}") 
           puts "=== S3 BUCKET CREATED ==="                 
 
-          # chmod = system("cd #{app_dir} && chmod +x install.sh")
-          # return {error: "INSTALL SCRIPT COULD NOT COPIED", campaign: campaign} unless chmod
-
-          # rake = system("cd #{app_dir} && bundle exec rake campanify:setup")
-          # return {error: app["name"]} unless rake 
-
-          # current_dir = Dir.pwd
-          # Dir.chdir(app_dir)
-          # install = system("cd #{app_dir} && ./install.sh")
-          # return {error: "APP COULD NOT INSTALLED", campaign: campaign} unless install
-          # Dir.chdir(current_dir)  
-          # puts "=== APP INSTALLED ==="                                    
-
-          # rm = system("cd #{app_dir} && rm -rf install.sh")
-          #       return {error: app["name"]} unless rm
-
+          # .env to heroku config mapping
           file_name = "#{Rails.root}/lib/templates/env"
           content = File.read(file_name)
           content = content.gsub(/free/, campaign.plan)      
           content = content.gsub(/bucket/, "campanify_app_#{slug.underscore}")
           Hash[content.split("\n").map{|v| v.split("=")}].each do |k,v|
-            # system("cd #{app_dir} && bundle exec heroku config:add #{k}=#{v} --app #{slug}")
             heroku.put_config_vars(campaign.slug, k => v)                 
           end
           # maintenance and error pages
           heroku.put_config_vars(campaign.slug, "ERROR_PAGE_URL" => "http://static.campanify.it/errors/500.html") 
-          heroku.put_config_vars(campaign.slug, "MAINTENANCE_PAGE_URL" => "http://static.campanify.it/errors/maintenance.html")                                     
-          
+          heroku.put_config_vars(campaign.slug, "MAINTENANCE_PAGE_URL" => "http://static.campanify.it/errors/maintenance.html")                                               
           puts "=== APP CONFIG SETTED ON HEROKU ==="                  
 
+          # capistrano recipe to create heroku postres db
           setup_db = system("cap campanify:setup_db -s slug=#{slug}")
           # return {error: "DB COULD NOT SETUP", campaign: campaign} unless setup_db
-          puts "SETUP DB : #{setup_db}"
-
-          # system("cd #{app_dir} && bundle exec heroku run rake db:migrate --app #{slug} --trace")
-          # puts "=== DB MIGRATED ON HEROKU ==="                  
-                    
-          # system("cd #{app_dir} && bundle exec heroku run rake db:seed --app #{slug} --trace")
-          # puts "=== DB SEEDED ON HEROKU ==="                            
-
-          puts "=== HEROKU SETUP STARTED ==="
-          # require 'rake'
+          puts "=== DB SET #{setup_db} ==="
+          
           config = Plans.configuration(campaign.plan.to_sym)          
-          # scale
-          puts "=== SCALING === "
           config[:ps].each do |type, quantity|
             heroku.post_ps_scale(slug, type, quantity)
           end
-          # updgrade/downgrade addons
-          puts "=== INSTALLING ADDONS ==="            
+          puts "=== SCALING DONE === "   
+                 
           config[:addons].each do |addon, plan|
             begin      
               heroku.post_addon(slug, "#{addon}:#{plan}")
@@ -241,15 +149,15 @@ module Campanify
               puts e
             end
           end
+          puts "=== ADDONS INSTALLED ==="                      
 
           # wait until sendgrid setup done
           until heroku.get_config_vars(slug).body["SENDGRID_USERNAME"].present? &&
                 heroku.get_config_vars(slug).body["SENDGRID_PASSWORD"].present?
             sleep(1)
           end
-
-          puts "=== CONFIG ==="
-          puts heroku.get_config_vars(slug).body
+          
+          change_theme(campaign, "default")
 
           puts "=== APP CREATION FINISHED AT #{Time.now} ==="                  
           
@@ -287,99 +195,72 @@ module Campanify
         
           return {plan: target_plan, campaign: campaign}                          
         rescue Exception => e
-          # rollback
-          puts "ERROR #{e}"
+          puts "ERROR ON CHANGE PLAN #{e}"
           rollback(campaign, target_plan)
           return {error: e, plan: target_plan, campaign: campaign}              
+        end
+      end
+      
+      def change_theme(campaign, theme)
+        begin
+          capified = system("cap campanify:chamge_theme -s slug=#{campaign.slug} -s theme=#{theme}")
+        rescue Exception => e
+          puts "ERROR ON CHANGE THEME #{e}"
+          return {error: e, theme: theme, campaign: campaign}              
         end
       end
       
       private
       
       def migrate_db(campaign, target_plan)
-        # begin
-          puts "=== HEROKU POSTGRES MIGRATION STARTED AT #{Time.now} ==="                            
-          # get configs
-          current_config = Campanify::Plans.configuration(campaign.plan.to_sym)
-          config = Campanify::Plans.configuration(target_plan.to_sym)
-          puts "=== CONFIGS SET ==="                            
-          
-          # put app on maintenance mode
-          heroku.post_app_maintenance(campaign.slug, 1)
-          campaign.set_status(Campaign::MAINTENANCE)
-          puts "=== MAINTENANCE MODE ON ==="                            
-          
-          # db migration
-          # ============
+        puts "=== HEROKU POSTGRES MIGRATION STARTED AT #{Time.now} ==="                            
+        # get configs
+        current_config = Campanify::Plans.configuration(campaign.plan.to_sym)
+        config = Campanify::Plans.configuration(target_plan.to_sym)
+        puts "=== CONFIGS SET ==="                            
+        
+        # put app on maintenance mode
+        heroku.post_app_maintenance(campaign.slug, 1)
+        campaign.set_status(Campaign::MAINTENANCE)
+        puts "=== MAINTENANCE MODE ON ==="                            
+        
+        # db migration
+        # ============
+        
+        r = heroku.post_addon(campaign.slug, config[:db]) rescue nil
+        r.body["message"].match(/\HEROKU_POSTGRESQL_+(.*)\_URL/)
+        target_db = "HEROKU_POSTGRESQL_#{$1}_URL"
+        puts "=== NEW DB ADDON CREATED ==="                            
+        
+        system("cap campanify:backup_db -s slug=#{campaign.slug}")
+        puts "=== DB BACKUP CAPTURED ==="                                                       
+        
+        puts "=== WAITING FOR NEW DB ==="        
+        waiting = system("cap campanify:wait_db -s slug=#{campaign.slug}")
 
-          # add new db addon
-          # heroku.delete_addon(campaign.slug, config[:db]) rescue nil
-          # puts "=== EXISTING DB ADDON REMOVED ==="                            
-          
-          r = heroku.post_addon(campaign.slug, config[:db]) rescue nil
-          r.body["message"].match(/\HEROKU_POSTGRESQL_+(.*)\_URL/)
-          target_db = "HEROKU_POSTGRESQL_#{$1}_URL"
-          puts "=== NEW DB ADDON CREATED ==="                            
-          
-          # capture backup of current db
-          # system("heroku pgbackups:capture --expire --app #{campaign.slug}")
-          system("cap campanify:backup_db -s slug=#{campaign.slug}")
-          puts "=== DB BACKUP CAPTURED ==="                            
-          
-          # remove oldish dbs
-          # current_dbs = config_vars.
-          #             delete_if{|key,value| !key.include?('POSTGRESQL')}.
-          #             delete_if{|key,value| value != config_vars['DATABASE_URL']}.
-          #             keys
-          
-          # get new db url
-          # config_vars = heroku.get_config_vars(campaign.slug).body
-          # target_db = config_vars.
-          #             delete_if{|key,value| !key.include?('POSTGRESQL')}.
-          #             delete_if{|key,value| value == config_vars['DATABASE_URL']}.
-          #             keys.first            
-          # puts "=== DB URL COPIED ==="                            
-          
-          # TODO: wait for ready
-          # waiting = `heroku pg:wait --app #{campaign.slug}`
-          waiting = system("cap campanify:wait_db -s slug=#{campaign.slug}")
-          puts "=== WAITING FOR NEW DB: #{waiting} ==="
-
-          # restore new db from backup
-          # system("heroku pgbackups:restore #{target_db} --app #{campaign.slug} --confirm #{campaign.slug}")
-          system("cap campanify:restore_db -s slug=#{campaign.slug} -s target_db=#{target_db}")
-          puts "=== DB RESTORED ==="
-          
-          # promote new db
-          # system("heroku pg:promote #{target_db} --app #{campaign.slug}")
-          system("cap campanify:promote_db -s slug=#{campaign.slug} -s target_db=#{target_db}")          
-          puts "=== DB PROMOTED ==="
-          
-          # remove old db addon
-          # if current_config[:db] != config[:db]
-          config_vars = heroku.get_config_vars(campaign.slug).body
-          old_dbs = config_vars.clone.
-                    delete_if{|key,value| !key.include?('POSTGRESQL')}.
-                    delete_if{|key,value| value != config_vars['DATABASE_URL']}.
-                    keys          
-          old_dbs.each do |old_db|          
-            heroku.delete_addon(campaign.slug, old_db) rescue nil
-          end
-          puts "=== OLD DB ADDON REMOVED ==="
-          # end
-          
-          # remove app from maintenance mode
-          heroku.post_app_maintenance(campaign.slug, 0)
-          campaign.set_status(Campaign::ONLINE)          
-          puts "=== MAINTENANCE MODE OFF ==="
-                  
-          return {campaign: campaign, target_plan: target_plan}
-        # rescue Exception => e
-        #           # rollback
-        #           rollback(campaign, target_plan)
-        #           
-        #           return {error: e, campaign: campaign, target_plan: target_plan}
-        #         end
+        system("cap campanify:restore_db -s slug=#{campaign.slug} -s target_db=#{target_db}")
+        puts "=== DB RESTORED ==="
+        
+        system("cap campanify:promote_db -s slug=#{campaign.slug} -s target_db=#{target_db}")          
+        puts "=== DB PROMOTED ==="
+        
+        # remove old addon
+        config_vars = heroku.get_config_vars(campaign.slug).body
+        old_dbs = config_vars.clone.
+                  delete_if{|key,value| !key.include?('POSTGRESQL')}.
+                  delete_if{|key,value| value != config_vars['DATABASE_URL']}.
+                  keys          
+        old_dbs.each do |old_db|          
+          heroku.delete_addon(campaign.slug, old_db) rescue nil
+        end
+        puts "=== OLD DB ADDON REMOVED ==="
+        
+        # turn maintenance mode off
+        heroku.post_app_maintenance(campaign.slug, 0)
+        campaign.set_status(Campaign::ONLINE)          
+        puts "=== MAINTENANCE MODE OFF ==="
+                
+        return {campaign: campaign, target_plan: target_plan}
       end
       
       def rollback(campaign, target_plan)
@@ -395,7 +276,6 @@ module Campanify
         current_config[:addons].each { |addon, plan| heroku.put_addon(campaign.slug, "#{addon}:#{plan}") rescue nil}
         
         # capture backup of current db
-        # system("heroku pgbackups:capture --expire --app #{campaign.slug}")
         system("cap campanify:backup_db -s slug=#{campaign.slug}")        
         puts "=== DB BACKUP CAPTURED ==="
         
@@ -406,10 +286,8 @@ module Campanify
         heroku.post_addon(campaign.slug, current_config[:db])
         puts "=== EXISTING DB ADDON CREATED ==="
         
-        # TODO: wait for ready
-        # waiting = `heroku pg:wait --app #{campaign.slug}`
+        puts "=== WAITING FOR NEW DB ==="        
         system("cap campanify:wait_db -s slug=#{campaign.slug}")        
-        puts "=== WAITING FOR NEW DB: #{waiting} ==="
         
         # get new db url
         config_vars = heroku.get_config_vars(campaign.slug).body
@@ -419,17 +297,12 @@ module Campanify
                     keys.first
         puts "=== DB URL COPIED ==="
         
-        # restore new db from backup
-        # system("heroku pgbackups:restore #{target_db} --app #{campaign.slug} --confirm #{campaign.slug}")
         system("cap campanify:restore_db -s slug=#{campaign.slug} -s target_db=#{target_db}")
         puts "=== DB RESTORED ==="
         
-        # promote new db
-        # system("heroku pg:promote #{target_db} --app #{campaign.slug}")
         system("cap campanify:promote_db -s slug=#{campaign.slug} -s target_db=#{target_db}")        
         puts "=== DB PROMOTED ==="
-        
-        # get new db url
+
         config_vars = heroku.get_config_vars(campaign.slug).body
         delete_dbs = config_vars.clone.
                     delete_if{|key,value| !key.include?('POSTGRESQL')}.
@@ -439,11 +312,10 @@ module Campanify
           heroku.delete_addon(campaign.slug, db) rescue nil          
         end
         
-        # remove app from maintenance mode
         heroku.post_app_maintenance(campaign.slug, 0)
         campaign.set_status(Campaign::ONLINE)          
         puts "=== MAINTENANCE MODE OFF ==="
-        
+        puts "===*** ROLLED BACK ***==="          
       end
     end
     
@@ -483,9 +355,22 @@ module Campanify
     if campaign = Campaign.find_by_slug(slug)
       result = Campaigns.change_plan(campaign, target_plan)
       unless result[:error]
-        campaign = campaign.update_column(:plan, target_plan)
+        campaign.update_column(:plan, target_plan)
       else
         puts "=== SOMETING WENT WRONG SLUG:#{result[:campaign].slug} ERROR: #{result[:error]}==="  
+      end
+      result
+    end
+  end
+  
+  def change_theme(slug, theme)
+    if campaign = Campaign.find_by_slug(slug)
+      result = Campaigns.change_theme(campaign, theme)
+      unless result[:error]
+        campaign.update_column(:theme, theme)
+        campaign.set_status(Campaign::ONLINE)
+      else
+        puts "=== SOMETING WENT WRONG, THEME COULDN'T CHANGED: #{result[:campaign].slug} ERROR: #{result[:error]} ==="        
       end
       result
     end

@@ -18,11 +18,6 @@ namespace :campanify do
   #   include Campanify    
   #   change_plan(args[:slug],args[:next_plan])
   # end
-  desc "Creates new User with given name and email"  
-  task :create_user, [:email, :full_name] => :environment do |t, args|
-    include Campanify    
-    create_user(args[:email], args[:full_name])
-  end 
   # desc "Creates an App with given name, plan behalf of Campanify Admin [Async Job]"
   # task :create_app_async, [:name, :plan] => :environment do |t, args|
   #   Delayed::Job.enqueue Jobs::CreateApp.new(args[:name],args[:plan],Campanify::ADMIN)
@@ -36,6 +31,12 @@ namespace :campanify do
   #   Delayed::Job.enqueue Jobs::ChangePlan.new(args[:slug],args[:next_plan])
   # end  
   
+  desc "Creates new User with given name and email"  
+  task :create_user, [:email, :full_name] => :environment do |t, args|
+    include Campanify    
+    create_user(args[:email], args[:full_name])
+  end
+  
   desc "Updates every app on db"
   task :update_all => :environment do
     Campaign.all.each do |app|
@@ -43,7 +44,7 @@ namespace :campanify do
     end
   end
   
-  desc "Updates every app on db"
+  desc "Push every app on db"
   task :push_all => :environment do
     Campaign.all.each do |app|
       system("cap campanify:push_app -s slug=#{app.slug}")

@@ -11,16 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120914074917) do
+ActiveRecord::Schema.define(:version => 20121007202149) do
 
   create_table "campaigns", :force => true do |t|
     t.string   "name"
     t.string   "slug"
     t.string   "plan"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.text     "status"
+    t.string   "theme",      :default => "default"
   end
 
   add_index "campaigns", ["name"], :name => "index_campaigns_on_name"

@@ -5,7 +5,7 @@ class Campaign < ActiveRecord::Base
   MAINTENANCE   = "maintenance"
   PENDING       = "pending"  
   
-  attr_accessible :name, :plan, :slug, :user_id, :status
+  attr_accessible :name, :plan, :slug, :user_id, :status, :theme
   belongs_to :user
   validates_presence_of :name, :plan, :slug, :user_id
   validates_uniqueness_of :name, :slug
@@ -23,7 +23,7 @@ class Campaign < ActiveRecord::Base
   #     Campanify::Plans.configuration(plan.to_sym)[:price]
   #   end
   def price
-    self.status != PENDING
+    if self.status != PENDING
       addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}
       ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
       campanify_price = Campanify::Plans.configuration(plan.to_sym)[:campanify_fee]
@@ -40,20 +40,28 @@ class Campaign < ActiveRecord::Base
   end
   
   def create_app
-    self.update_column(:status, PENDING)    
+    set_status PENDING
     Delayed::Job.enqueue(Jobs::CreateApp.new(self.slug))
   end
   
   def destroy_app
-    self.update_column(:status, PENDING)    
+    set_status PENDING
     Jobs::DestroyApp.new(self.slug).perform
   end
   
   def change_plan    
     if self.plan_was != self.plan && self.status == ONLINE
-      self.update_column(:status, PENDING)      
+      set_status PENDING
       Delayed::Job.enqueue(Jobs::ChangePlan.new(self.slug, self.plan))
       self.plan = self.plan_was
+    end
+  end
+  
+  def change_theme
+    if self.theme_was != self.theme && self.status == ONLINE
+      set_status PENDING    
+      Delayed::Job.enqueue(Jobs::ChangeTheme.new(self.slug, self.theme))
+      self.theme = self.plan_theme
     end
   end
   

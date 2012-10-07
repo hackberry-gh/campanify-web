@@ -29,7 +29,7 @@ $(document).ready(function(){
 	$.initEvents = function() {
 	$("form[data-remote=true]").
 	on('ajax:beforeSend', function(event, data, status) {
-		
+		$(this).find(".alert").remove();
 		var submit = $(this).find("input[type=submit]");
 		submit.data("val", submit.val()).attr('disabled',true).val('...');
 	}).
@@ -41,11 +41,10 @@ $(document).ready(function(){
 		submit.removeAttr('disabled').val(submit.data('val'));
 	}).
 	on("ajax:success", function(event, data, status) {
-		
 		var form = $(this);
-		form.slideUp(function () { 
-			$(this).replaceWith( $( $("#campaigns_template_success").html() ).hide().fadeIn() )
-		});
+		form.find("#campaign_name").val("");
+		form.find("#campaign_plan").val("");		
+		form.prepend( $( $("#campaigns_template_success").html()).hide().fadeIn() );
 	});
 	}
 	
@@ -161,5 +160,6 @@ $(document).ready(function(){
 
 		return false;
 	});
-	
+
+	$.initEvents();	
 });

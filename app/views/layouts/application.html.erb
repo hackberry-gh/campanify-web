@@ -24,28 +24,17 @@
   	<%= javascript_include_tag "application" %>
 		<script src="http://js.pusher.com/1.12/pusher.min.js"></script>
 		<script>
-		 Pusher.log = function(message) {
-          if (window.console && window.console.log) window.console.log(message);
-      };
-  
-      WEB_SOCKET_DEBUG = true;
+		<% if Rails.env.development? %>
+		Pusher.log = function(message) {
+			if (window.console && window.console.log) window.console.log(message);
+		};
+
+		WEB_SOCKET_DEBUG = true;
+		<% end %>
 		var pusher = new Pusher('<%= ENV['PUSHER_API_KEY']%>'); // Replace with your app key
 		var channel = pusher.subscribe('campaigns');
 		channel.bind('update', function(data) {
-			var campaigns_tr = $("#campaigns_template_tr").html();
-			campaigns_tr = campaigns_tr.
-							replace(/\${slug}/g, data.slug).
-							replace(/\${name}/g, data.name).
-							replace(/\${plan}/g, data.plan).
-							replace(/\${status}/g, data.status).
-							replace(/\${price}/g, data.price).								
-							replace(/\${theme}/g, data.theme).																	
-							replace(/\${id}/g, data.id);
-		  $("tr#campaign_" + data.id).replaceWith(campaigns_tr);
-			var tr = $("tr#campaign_" + data.id);
-			if (tr.find(".status").text() != "online") tr.find(".actions").html('<%= image_tag "ajax-loader.gif" %>');
-			tr.find(".change_campaign_plan").val(tr.find(".plan").data("plan"));
-			tr.find(".change_campaign_theme").val(tr.find(".theme").data("theme"));		
+			$.updateCampaignRow(data);	
 		});
 		</script>
   </body>

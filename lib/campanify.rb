@@ -98,38 +98,41 @@ module Campanify
         puts "=== APP CREATION STARTED AT #{Time.now} ==="
         app = heroku.post_app(name: campaign.slug).body
         slug = app["name"]                
-        return {error: app["error"], campaign: campaign} unless slug
+        return {error: app["error"], campaign: campaign} if app["error"]
         
-        puts "=== APP CREATED #{slug} ==="        
+        puts "=== APP CREATED #{slug} ==="     
+           
         begin
           app_dir = "#{APPS_DIR}/#{slug}"
-          
-          # capistrano recipe to clone bare campaign app and setup on heroku
-          capified = system("cap campanify:clone_app -s slug=#{slug} -s rails_root=#{Rails.root} -s campaign_name='#{campaign.name}' -s campaign_slug=#{slug} -s campaign_user_email=#{campaign.user.email} -s campaign_user_full_name='#{campaign.user.full_name}' -s campaign_user_password=#{Devise.friendly_token.first(6)} -s campaign_plan=#{campaign.plan} -s slug_underscore=#{slug.underscore}") 
-          
-          puts "=== CAPIFIED #{capified} ==="
-          # return {error: "APP COULD NOT CREATED", campaign: campaign} unless capified
           
           # create s3 bucket per campaign
           AWS::S3::Base.establish_connection!(
             :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
             :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
             )
-          AWS::S3::Bucket.create("campanify_app_#{slug.underscore}") 
+          AWS::S3::Bucket.create("campanify-app-#{slug}") 
           puts "=== S3 BUCKET CREATED ==="                 
 
           # .env to heroku config mapping
           file_name = "#{Rails.root}/lib/templates/env"
           content = File.read(file_name)
           content = content.gsub(/free/, campaign.plan)      
-          content = content.gsub(/bucket/, "campanify_app_#{slug.underscore}")
+          content = content.gsub(/bucket/, "campanify-app-#{slug}")
           Hash[content.split("\n").map{|v| v.split("=")}].each do |k,v|
-            heroku.put_config_vars(campaign.slug, k => v)                 
+            heroku.put_config_vars(slug, k => v)                 
           end
           # maintenance and error pages
-          heroku.put_config_vars(campaign.slug, "ERROR_PAGE_URL" => "http://static.campanify.it/errors/500.html") 
-          heroku.put_config_vars(campaign.slug, "MAINTENANCE_PAGE_URL" => "http://static.campanify.it/errors/maintenance.html")                                               
-          puts "=== APP CONFIG SETTED ON HEROKU ==="                  
+          heroku.put_config_vars(slug, "ERROR_PAGE_URL" => "http://static.campanify.it/errors/500.html") 
+          heroku.put_config_vars(slug, "MAINTENANCE_PAGE_URL" => "http://static.campanify.it/errors/maintenance.html")                                               
+          puts "=== APP CONFIG SETTED ON HEROKU ==="
+          puts heroku.get_config_vars(slug).body
+          puts "==================================="
+          
+          # capistrano recipe to clone bare campaign app and setup on heroku
+          capified = system("cap campanify:clone_app -s slug=#{slug} -s rails_root=#{Rails.root} -s campaign_name='#{campaign.name}' -s campaign_slug=#{slug} -s campaign_user_email=#{campaign.user.email} -s campaign_user_full_name='#{campaign.user.full_name}' -s campaign_user_password=#{Devise.friendly_token.first(6)} -s campaign_plan=#{campaign.plan} -s slug_underscore=#{slug.underscore}") 
+          
+          puts "=== CAPIFIED #{capified} ==="
+          # return {error: "APP COULD NOT CREATED", campaign: campaign} unless capified
 
           # capistrano recipe to create heroku postres db
           setup_db = system("cap campanify:setup_db -s slug=#{slug}")
@@ -328,7 +331,7 @@ module Campanify
     if campaign = Campaign.find_by_slug(slug)
       result = Campaigns.create_app(campaign)
       if result[:error]
-        puts "=== SOMETING WENT WRONG, DESTROYING APP SLUG: #{result[:campaign].slug} ERROR: #{result[:error]} ==="
+        puts "=== SOMETHING WENT WRONG, DESTROYING APP SLUG: #{result[:campaign].slug} ERROR: #{result[:error]} ==="
         campaign.destroy
       else
         user = result.delete(:user)
@@ -347,7 +350,7 @@ module Campanify
         :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
         :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
         )
-      AWS::S3::Bucket.delete("campanify_app_#{slug.underscore}", :force => true) rescue nil
+      AWS::S3::Bucket.delete("campanify-app-#{slug}", :force => true) rescue nil
     end
   end
   
@@ -357,7 +360,7 @@ module Campanify
       unless result[:error]
         campaign.update_column(:plan, target_plan)
       else
-        puts "=== SOMETING WENT WRONG SLUG:#{result[:campaign].slug} ERROR: #{result[:error]}==="  
+        puts "=== SOMETHING WENT WRONG, PLAN COULDN'T CHANGED: SLUG:#{result[:campaign].slug} ERROR: #{result[:error]}==="  
       end
       result
     end
@@ -370,7 +373,7 @@ module Campanify
         campaign.update_column(:theme, theme)
         campaign.set_status(Campaign::ONLINE)
       else
-        puts "=== SOMETING WENT WRONG, THEME COULDN'T CHANGED: #{result[:campaign].slug} ERROR: #{result[:error]} ==="        
+        puts "=== SOMETHING WENT WRONG, THEME COULDN'T CHANGED: SLUG:#{result[:campaign].slug} ERROR: #{result[:error]} ==="        
       end
       result
     end

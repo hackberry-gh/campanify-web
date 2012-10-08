@@ -94,45 +94,66 @@ $(document).ready(function(){
 	
 	}
 	
+	$.parseCampaignRowTmp = function(campaign) {
+		var campaigns_tr = $("#campaigns_template_tr").html(),
+				campaign_class = campaign.status == "online" ? "success" : "warning";
+		campaigns_tr = campaigns_tr.
+						replace(/\${campaign_class}/g, campaign_class).
+						replace(/\${slug}/g, campaign.slug).
+						replace(/\${name}/g, campaign.name).
+						replace(/\${plan}/g, campaign.plan).
+						replace(/\${status}/g, campaign.status).
+						replace(/\${price}/g, campaign.price).								
+						replace(/\${theme}/g, campaign.theme).																	
+						replace(/\${id}/g, campaign.id);
+		return 	campaigns_tr;			
+	}
+	
+	$.setCampaignRowStatus = function(tr) {
+		if (tr.find(".status").text() != "online") {
+			tr.find(".visit").html("...");
+			if(tr.find(".status").text() == "deleted" )
+				tr.find(".actions").html('');			
+			else
+				tr.find(".actions").html('<%= image_tag "ajax-loader.gif" %>');
+			tr.find(".change_campaign_plan").parents("td").text(tr.find(".plan").data("plan"));
+			tr.find(".change_campaign_theme").parents("td").text(tr.find(".theme").data("theme"));
+		}else{
+			tr.find(".change_campaign_plan").val(tr.find(".plan").data("plan"));
+			tr.find(".change_campaign_theme").val(tr.find(".theme").data("theme"));					
+		}
+	}
+	
+	$.updateCampaignRow = function(campaign) {
+		
+		var campaigns_tr = 	$.parseCampaignRowTmp(campaign);
+		
+	  $("tr#campaign_" + campaign.id).replaceWith(campaigns_tr);
+	
+		$.setCampaignRowStatus( $("tr#campaign_" + campaign.id) );
+	}
+	
 	$.myCampaigns = function() {
 			$.get("/api/campaigns", function (data) {
 
 				var campaigns_table = $("#campaigns_template_table").html(),
-						campaigns_tr 		= $("#campaigns_template_tr").html(),
 						list 						= '';
 
-				for (var i in data) {
-					var campaign = data[i],
-							campaign_class = campaign.status == "online" ? "success" : "warning";
-
-					list += campaigns_tr.
-									replace(/\${campaign_class}/g, campaign_class).
-									replace(/\${slug}/g, campaign.slug).
-									replace(/\${name}/g, campaign.name).
-									replace(/\${plan}/g, campaign.plan).
-									replace(/\${status}/g, campaign.status).
-									replace(/\${price}/g, campaign.price).								
-									replace(/\${theme}/g, campaign.theme).																	
-									replace(/\${id}/g, campaign.id);
+				if (data.length == 0) {
+					campaigns_table = "<h1>No apps found</h1>";
+				}else{
+					for (var i in data) {
+						list += $.parseCampaignRowTmp(data[i]);
+					}
+					campaigns_table = campaigns_table.replace(/\${list}/, list );	
 				}
-
-				campaigns_table = campaigns_table.replace(/\${list}/, list );
-				if (data.length == 0) campaigns_table = "<h1>No apps found</h1>"; 
 
 				$(".main").html(campaigns_table);
 				
 				$("tr.campaign").each(function(){
-					if ($(this).find(".status").text() != "online") {
-						$(this).find(".actions").html('<%= image_tag "ajax-loader.gif" %>');
-						$(this).find(".change_campaign_plan").parents("td").text($(this).find(".plan").data("plan"));
-						$(this).find(".change_campaign_plan").parents("td").text($(this).find(".theme").data("theme"));
-					}else{
-						$(this).find(".change_campaign_plan").val($(this).find(".plan").data("plan"));
-						$(this).find(".change_campaign_theme").val($(this).find(".theme").data("theme"));					
-					}
+					$.setCampaignRowStatus($(this));
 				});
 
-				
 				$.initEvents();
 			});
 		

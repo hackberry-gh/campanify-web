@@ -4,7 +4,7 @@ class Campaign < ActiveRecord::Base
   ONLINE        = "online"
   MAINTENANCE   = "maintenance"
   PENDING       = "pending"  
-  DELETING      = "deleting"    
+  DELETED       = "deleted"    
   
   attr_accessible :name, :plan, :slug, :user_id, :status, :theme
   belongs_to :user
@@ -31,7 +31,7 @@ class Campaign < ActiveRecord::Base
   #     Campanify::Plans.configuration(plan.to_sym)[:price]
   #   end
   def price
-    if self.status != PENDING
+    if self.status == ONLINE
       addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}
       ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
       campanify_price = Campanify::Plans.configuration(plan.to_sym)[:campanify_fee]
@@ -54,8 +54,12 @@ class Campaign < ActiveRecord::Base
   end
   
   def destroy_app
-    set_status DELETING
-    Jobs::DestroyApp.new(self.slug).perform
+    set_status DELETED
+    begin
+      Jobs::DestroyApp.new(self.slug).perform
+    rescue Heroku::API::Errors::NotFound
+      nil
+    end
   end
   
   def change_plan    

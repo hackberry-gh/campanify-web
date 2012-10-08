@@ -21,3 +21,4 @@
 /app/views/shared
 /app/views/user_mailer
 /app/views/users
+.env

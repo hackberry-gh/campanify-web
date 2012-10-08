@@ -44,13 +44,20 @@ namespace :campanify do
     put_respons = put content, target_file_name    
     puts "=== SETTINGS.YML GENERATED ==="
 
-    file_name = "#{rails_root}/lib/templates/env"
+    # file_name = "#{rails_root}/lib/templates/env"
+    # content = File.read(file_name)
+    # content = content.gsub(/free/, campaign_plan)      
+    # content = content.gsub(/bucket/, "campanify_app_#{slug_underscore}")                
+    # target_file_name = "#{app_dir}/.env"
+    # put_respons = put content, target_file_name    
+    # puts "=== .ENV GENERATED ==="
+    
+    file_name = "#{rails_root}/lib/templates/asset_sync.yml"
     content = File.read(file_name)
-    content = content.gsub(/free/, campaign_plan)      
-    content = content.gsub(/bucket/, "campanify_app_#{slug_underscore}")                
-    target_file_name = "#{app_dir}/.env"
+    content = content.gsub(/bucket/, "campanify-app-#{slug}")      
+    target_file_name = "#{app_dir}/config/asset_sync.yml"
     put_respons = put content, target_file_name    
-    puts "=== .ENV GENERATED ==="
+    puts "=== ASSET_SYNC.YML GENERATED ==="
     
     file_name = "#{rails_root}/lib/templates/gitignore"
     content = File.read(file_name)

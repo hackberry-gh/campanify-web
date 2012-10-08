@@ -112,8 +112,8 @@ module Campanify
           
           # create s3 bucket per campaign
           AWS::S3::Base.establish_connection!(
-            :access_key_id     => ENV['AWS_S3_KEY'],
-            :secret_access_key => ENV['AWS_S3_SECRET']
+            :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
+            :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
             )
           AWS::S3::Bucket.create("campanify_app_#{slug.underscore}") 
           puts "=== S3 BUCKET CREATED ==="                 
@@ -203,7 +203,7 @@ module Campanify
       
       def change_theme(campaign, theme)
         begin
-          capified = system("cap campanify:chamge_theme -s slug=#{campaign.slug} -s theme=#{theme}")
+          capified = system("cap campanify:change_theme -s slug=#{campaign.slug} -s theme=#{theme}")
         rescue Exception => e
           puts "ERROR ON CHANGE THEME #{e}"
           return {error: e, theme: theme, campaign: campaign}              
@@ -344,8 +344,8 @@ module Campanify
       system("cap campanify:remove_app -s slug=#{slug}")
       heroku.delete_app(slug) rescue nil
       AWS::S3::Base.establish_connection!(
-          :access_key_id     => ENV['AWS_S3_KEY'],
-          :secret_access_key => ENV['AWS_S3_SECRET']
+        :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
+        :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
         )
       AWS::S3::Bucket.delete("campanify_app_#{slug.underscore}", :force => true) rescue nil
     end

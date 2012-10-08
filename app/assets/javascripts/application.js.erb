@@ -27,14 +27,14 @@ $(document).ready(function(){
 	}
 		
 	$.initEvents = function() {
-	$("form[data-remote=true]").
+	// new campaign form	
+	$("form#new_campaign[data-remote=true]").
 	on('ajax:beforeSend', function(event, data, status) {
 		$(this).find(".alert").remove();
 		var submit = $(this).find("input[type=submit]");
 		submit.data("val", submit.val()).attr('disabled',true).val('...');
 	}).
 	on('ajax:error', function(event, xhr, status) {
-		
 		var submit = $(this).find("input[type=submit]");
 		$("body").prepend($("#campaigns_template_error").html().
 							replace(/\${message}/, $.errorList(xhr.responseText)));
@@ -46,72 +46,95 @@ $(document).ready(function(){
 		form.find("#campaign_plan").val("");		
 		form.prepend( $( $("#campaigns_template_success").html()).hide().fadeIn() );
 	});
-	}
 	
+	// campaign change plan select
+	$(".change_campaign_plan").change(function(){
+		var plan = $(this).val();
+		var id = $(this).data("id");		
+		$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {plan: plan}}, function(data){
+			if(data.id){
+				modal.find('.close').click();
+			}else{
+				// console.log(data);
+			}
+		});
+	});
+	
+	// campaign change theme select
+	$(".change_campaign_theme").change(function(){
+		var theme = $(this).val();
+		var id = $(this).data("id");		
+		$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {theme: theme}}, function(data){
+			if(data.id){
+				modal.find('.close').click();
+			}else{
+				// console.log(data);
+			}
+		});
+	});
+	
+	// campaign delete button
+	$("a.destroy").
+	on('ajax:beforeSend', function(event, data, status) {
+		var a = $(this);
+		a.data("text", a.text()).attr('disabled',true).text('...');
+	}).
+	on('ajax:error', function(event, xhr, status) {
+
+		var a = $(this);
+		$("body").prepend($("#campaigns_template_error").html().
+							replace(/\${message}/, $.errorList(xhr.responseText)));
+		a.removeAttr('disabled').text(a.data('val'));
+	}).
+	on("ajax:success", function(event, data, status) {
+		// console.log($(this))
+		var tr = $(this).parents("tr");
+		tr.fadeOut(function () { tr.remove() });
+	});
+	
+	}
 	
 	$.myCampaigns = function() {
 			$.get("/api/campaigns", function (data) {
 
 				var campaigns_table = $("#campaigns_template_table").html(),
-						campaigns_tr = $("#campaigns_template_tr").html(),
-						modal = $("#my_campaigns_modal"),
-						list = '';
+						campaigns_tr 		= $("#campaigns_template_tr").html(),
+						list 						= '';
 
 				for (var i in data) {
 					var campaign = data[i],
 							campaign_class = campaign.status == "online" ? "success" : "warning";
-							console.log(campaign)
+
 					list += campaigns_tr.
+									replace(/\${campaign_class}/g, campaign_class).
 									replace(/\${slug}/g, campaign.slug).
 									replace(/\${name}/g, campaign.name).
 									replace(/\${plan}/g, campaign.plan).
 									replace(/\${status}/g, campaign.status).
 									replace(/\${price}/g, campaign.price).								
+									replace(/\${theme}/g, campaign.theme).																	
 									replace(/\${id}/g, campaign.id);
 				}
 
 				campaigns_table = campaigns_table.replace(/\${list}/, list );
 				if (data.length == 0) campaigns_table = "<h1>No apps found</h1>"; 
 
-				// modal.find(".modal-body").html(campaigns_table);
 				$(".main").html(campaigns_table);
 				
-				$(".campaign_class").each(function(){
-					if ($(this).find(".status").text() != "online") $(this).find(".actions").html('<%= image_tag "ajax-loader.gif" %>');
-					$(this).find(".change_campaign_plan").val($(this).find(".plan").text());
-				});
-				// modal.modal();
-
-				$(".change_campaign_plan").change(function(){
-					var plan = $(this).val();
-					var id = $(this).data("id");		
-					$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {plan: plan}}, function(data){
-						if(data.id){
-							modal.find('.close').click();
-						}else{
-							console.log(data);
-						}
-					});
+				$("tr.campaign").each(function(){
+					if ($(this).find(".status").text() != "online") {
+						$(this).find(".actions").html('<%= image_tag "ajax-loader.gif" %>');
+						$(this).find(".change_campaign_plan").parents("td").text($(this).find(".plan").data("plan"));
+						$(this).find(".change_campaign_plan").parents("td").text($(this).find(".theme").data("theme"));
+					}else{
+						$(this).find(".change_campaign_plan").val($(this).find(".plan").data("plan"));
+						$(this).find(".change_campaign_theme").val($(this).find(".theme").data("theme"));					
+					}
 				});
 
-				$("a.destroy").
-				on('ajax:beforeSend', function(event, data, status) {
-					var a = $(this);
-					a.data("text", a.text()).attr('disabled',true).text('...');
-				}).
-				on('ajax:error', function(event, xhr, status) {
-
-					var a = $(this);
-					$("body").prepend($("#campaigns_template_error").html().
-										replace(/\${message}/, $.errorList(xhr.responseText)));
-					a.removeAttr('disabled').text(a.data('val'));
-				}).
-				on("ajax:success", function(event, data, status) {
-					console.log($(this))
-					var tr = $(this).parents("tr");
-					tr.fadeOut(function () { tr.remove() });
-				});
-			})
+				
+				$.initEvents();
+			});
 		
 	}
 	
@@ -152,14 +175,15 @@ $(document).ready(function(){
 			$.myCampaigns();
 			break;
 			default:
-			$(".main").load(href.replace("#",""));
+			$(".main").load(href.replace("#",""),function(){
+				$.initEvents();
+			});
 			break;
 		}
-
-		$.initEvents();
 
 		return false;
 	});
 
 	$.initEvents();	
+	
 });

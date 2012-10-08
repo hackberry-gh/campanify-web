@@ -7,6 +7,7 @@
       <th>Name</th>
       <th>Plan</th>
       <th>Status</th>
+      <th>Theme</th>
       <th>Price</th>
       <th></th>				
     </tr>
@@ -17,25 +18,27 @@
 </table>
 </script>
 <script id="campaigns_template_tr" type="text/x-jquery-tmpl">
-<tr class="campaign_class ">
+<tr id="campaign_${id}" class="campaign ${campaign_class}">
 	<td><a href="http://${slug}.campanify.it" target="_blank">visit</a></td>
   <td class="name">${name}</td>
-  <td class="plan">${plan}</td>
+  <td class="plan" data-plan="${plan}">
+	<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
+	<option value="free">free</option>		
+	<option value="town">town</option>
+	<option value="city">city</option>
+	<option value="country">country</option>
+	<option value="earth">earth</option>
+	</select>
+	</td>
   <td class="status">${status}</td>
-  <td class="theme">${theme}</td>
+  <td class="theme" data-theme="${theme}">
+	<select class="change_campaign_theme input input-small campaign_theme_small" data-id="${id}">
+	<option value="default">default</option>		
+	<option value="naked">naked</option>
+	</select>
+	</td>
   <td class="price">${price}</td>
   <td class="actions">
-		<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
-		<option value="free">free</option>		
-		<option value="town">town</option>
-		<option value="city">city</option>
-		<option value="country">country</option>
-		<option value="earth">earth</option>
-		</select>
-		<select class="change_campaign_theme input input-small campaign_theme_small" data-id="${id}">
-		<option value="default">default</option>		
-		<option value="naked">naked</option>
-		</select>		
 		<a href="/api/campaigns/${id}" class="btn btn-small btn-danger destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?">delete</a>		
 	</td>			
 </tr>
@@ -48,6 +51,7 @@
 </script>
 <script id="campaigns_template_success" type="text/x-jquery-tmpl">
 <div class="alert alert-success">
-Your campaign is been creating, it takes several minutes, you can track its status by clicking `My Campaign` above.
+<button type="button" class="close" data-dismiss="alert">×</button>
+Your campaign is been creating, it takes several minutes, you can track its status by clicking `My Campaign` on the left.
 </div>
 </script>

@@ -4,6 +4,7 @@ class Campaign < ActiveRecord::Base
   ONLINE        = "online"
   MAINTENANCE   = "maintenance"
   PENDING       = "pending"  
+  DELETING      = "deleting"    
   
   attr_accessible :name, :plan, :slug, :user_id, :status, :theme
   belongs_to :user
@@ -15,8 +16,15 @@ class Campaign < ActiveRecord::Base
   before_update     :change_plan
   before_destroy    :destroy_app
   
+  def serializable_hash(options = {})
+    super((options || { }).merge({
+        :methods => [:price]
+    }))
+  end
+  
   def set_status(status)
     self.update_column(:status, status)
+    Pusher['campaigns'].trigger('update', self)
   end
   
   # def price
@@ -28,6 +36,7 @@ class Campaign < ActiveRecord::Base
       ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
       campanify_price = Campanify::Plans.configuration(plan.to_sym)[:campanify_fee]
       addon_price + ps_price + campanify_price
+      addon_price < 0 ? 0 : addon_price
     else
       0
     end
@@ -45,7 +54,7 @@ class Campaign < ActiveRecord::Base
   end
   
   def destroy_app
-    set_status PENDING
+    set_status DELETING
     Jobs::DestroyApp.new(self.slug).perform
   end
   

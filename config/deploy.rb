@@ -52,6 +52,12 @@ namespace :campanify do
     put_respons = put content, target_file_name    
     puts "=== .ENV GENERATED ==="
     
+    file_name = "#{rails_root}/lib/templates/gitignore"
+    content = File.read(file_name)
+    target_file_name = "#{app_dir}/.gitignore"
+    put_respons = put content, target_file_name    
+    puts "=== .GITIGNORE REPLACED ==="    
+    
     run "cd #{app_dir} && source $HOME/.bashrc && rvm gemset use campanify"
     run "cd #{app_dir} && git remote rm heroku"
     run "cd #{app_dir} && git remote add heroku git@heroku.com:#{slug}.git"           
@@ -64,8 +70,8 @@ namespace :campanify do
   
   task :setup_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:migrate --app #{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed --app #{slug}"    
+    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:migrate --app #{slug} --trace"
+    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed:original --app #{slug} --trace"    
   end
   
   task :backup_db, :roles => :campanify do
@@ -104,14 +110,17 @@ namespace :campanify do
     run "cd #{app_dir} && git push heroku master"    
   end
   
-  task :change_template, :roles => :campanify do
+  task :change_theme, :roles => :campanify do
+    puts "== CHAGING THEME to #{theme}"
     app_dir = "/home/campanify/apps/#{slug}"    
-    run "cp -fr /home/campanify/themes/#{theme} #{app_dir}/db/seeds/themes/#{theme}"
-    run "cp -fr /home/campanify/themes_#{theme}_install.seeds.rb #{app_dir}/db/seeds/themes_#{theme}_install.seeds.rb"    
+    run "mkdir -p #{app_dir}/db/seeds/themes/#{theme}"
+    run "cp -fr /home/campanify/themes/themes/#{theme} #{app_dir}/db/seeds/themes"
+    run "cp -fr /home/campanify/themes/themes_#{theme}_install.seeds.rb #{app_dir}/db/seeds/themes_#{theme}_install.seeds.rb"    
     run "cd #{app_dir} && git add ."    
     run "cd #{app_dir} && git commit -am 'changed to #{theme}'"
     run "cd #{app_dir} && git push heroku master"    
     run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed:themes_#{theme}_install --app #{slug}"     
+    puts "== THEME CHANGING COMPLETE #{theme}"    
   end
   
 end

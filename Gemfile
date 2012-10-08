@@ -10,6 +10,7 @@ gem 'heroku'
 gem 'heroku-api'
 gem 'delayed_job_active_record'
 gem 'aws-s3', :require => "aws/s3"
+gem 'pusher'
 
 group :assets do
   gem 'sass-rails',   							'~> 3.2.3'

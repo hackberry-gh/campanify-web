@@ -27,76 +27,80 @@ $(document).ready(function(){
 	}
 		
 	$.initEvents = function() {
-	// new campaign form	
-	$("form#new_campaign[data-remote=true]").
-	on('ajax:beforeSend', function(event, data, status) {
-		$(this).find(".alert").remove();
-		var submit = $(this).find("input[type=submit]");
-		submit.data("val", submit.val()).attr('disabled',true).val('...');
-	}).
-	on('ajax:error', function(event, xhr, status) {
-		var submit = $(this).find("input[type=submit]");
-		$("body").prepend($("#campaigns_template_error").html().
-							replace(/\${message}/, $.errorList(xhr.responseText)));
-		submit.removeAttr('disabled').val(submit.data('val'));
-	}).
-	on("ajax:success", function(event, data, status) {
-		var form = $(this);
-		form.find("#campaign_name").val("");
-		form.find("#campaign_plan").val("");		
-		form.prepend( $( $("#campaigns_template_success").html()).hide().fadeIn() );
-	});
-	
-	// campaign change plan select
-	$(".change_campaign_plan").change(function(){
-		var plan = $(this).val();
-		var id = $(this).data("id");		
-		$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {plan: plan}}, function(data){
-			if(data.id){
-				modal.find('.close').click();
-			}else{
-				// console.log(data);
-			}
+		// new campaign form	
+		$("form#new_campaign[data-remote=true]").
+		unbind('ajax:beforeSend').
+		on('ajax:beforeSend', function(event, data, status) {
+			$(this).find(".alert").remove();
+			var submit = $(this).find("input[type=submit]");
+			submit.data("val", submit.val()).attr('disabled',true).val('...');
+		}).
+		unbind('ajax:error').		
+		on('ajax:error', function(event, xhr, status) {
+			var submit = $(this).find("input[type=submit]");
+			$("body").prepend($("#campaigns_template_error").html().
+								replace(/\${message}/, $.errorList(xhr.responseText)));
+			submit.removeAttr('disabled').val(submit.data('val'));
+		}).
+		unbind('ajax:success').				
+		on("ajax:success", function(event, data, status) {
+			var form = $(this);
+			form.find("#campaign_name").val("");
+			form.find("#campaign_plan").val("");		
+			form.prepend( $( $("#campaigns_template_success").html()).hide().fadeIn() );
 		});
-	});
 	
-	// campaign change theme select
-	$(".change_campaign_theme").change(function(){
-		var theme = $(this).val();
-		var id = $(this).data("id");		
-		$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {theme: theme}}, function(data){
-			if(data.id){
-				modal.find('.close').click();
-			}else{
-				// console.log(data);
-			}
+		// campaign change plan select
+		$(".change_campaign_plan").
+		unbind("change").
+		change(function(){
+			var plan = $(this).val();
+			var id = $(this).data("id");		
+			$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {plan: plan}}, function(data){
+				console.log(data);
+			});
 		});
-	});
 	
-	// campaign delete button
-	$("a.destroy").
-	on('ajax:beforeSend', function(event, data, status) {
-		var a = $(this);
-		a.data("text", a.text()).attr('disabled',true).text('...');
-	}).
-	on('ajax:error', function(event, xhr, status) {
+		// campaign change theme select
+		$(".change_campaign_theme").
+		unbind("change").
+		change(function(){
+			var theme = $(this).val();
+			var id = $(this).data("id");		
+			$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {theme: theme}}, function(data){
+				console.log(data);
+			});
+		});
+	
+		// campaign delete button
+		$("a.destroy").
+		unbind("ajax:beforeSend").
+		on('ajax:beforeSend', function(event, data, status) {
+			var a = $(this);
+			a.data("text", a.text()).attr('disabled',true).text('...');
+		}).
+		unbind("ajax:error").		
+		on('ajax:error', function(event, xhr, status) {
 
-		var a = $(this);
-		$("body").prepend($("#campaigns_template_error").html().
-							replace(/\${message}/, $.errorList(xhr.responseText)));
-		a.removeAttr('disabled').text(a.data('val'));
-	}).
-	on("ajax:success", function(event, data, status) {
-		// console.log($(this))
-		var tr = $(this).parents("tr");
-		tr.fadeOut(function () { tr.remove() });
-	});
+			var a = $(this);
+			$("body").prepend($("#campaigns_template_error").html().
+								replace(/\${message}/, $.errorList(xhr.responseText)));
+			a.removeAttr('disabled').text(a.data('val'));
+		}).
+		unbind("ajax:success").				
+		on("ajax:success", function(event, data, status) {
+			// console.log($(this))
+			var tr = $(this).parents("tr");
+			tr.fadeOut(function () { tr.remove() });
+		});
 	
 	}
 	
 	$.parseCampaignRowTmp = function(campaign) {
 		var campaigns_tr = $("#campaigns_template_tr").html(),
-				campaign_class = campaign.status == "online" ? "success" : "warning";
+				status_classes = {online: "success", deleted: "error", pending: "warning", maintenance: "warning"}
+				campaign_class = status_classes[campaign.status];
+				
 		campaigns_tr = campaigns_tr.
 						replace(/\${campaign_class}/g, campaign_class).
 						replace(/\${slug}/g, campaign.slug).
@@ -131,6 +135,8 @@ $(document).ready(function(){
 	  $("tr#campaign_" + campaign.id).replaceWith(campaigns_tr);
 	
 		$.setCampaignRowStatus( $("tr#campaign_" + campaign.id) );
+		
+		$.initEvents();		
 	}
 	
 	$.myCampaigns = function() {

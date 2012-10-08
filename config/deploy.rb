@@ -123,10 +123,11 @@ namespace :campanify do
     run "mkdir -p #{app_dir}/db/seeds/themes/#{theme}"
     run "cp -fr /home/campanify/themes/themes/#{theme} #{app_dir}/db/seeds/themes"
     run "cp -fr /home/campanify/themes/themes_#{theme}_install.seeds.rb #{app_dir}/db/seeds/themes_#{theme}_install.seeds.rb"    
+    
     run "cd #{app_dir} && git add ."    
-    run "cd #{app_dir} && git commit -am 'changed to #{theme}'"
-    run "cd #{app_dir} && git push heroku master"    
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed:themes_#{theme}_install --app #{slug}"     
+    run "cd #{app_dir} && git commit -am 'changed to #{theme}' --amend"
+    run "cd #{app_dir} && git push heroku master --force"    
+    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed:themes_#{theme}_install --app #{slug} --trace"     
     puts "== THEME CHANGING COMPLETE #{theme}"    
   end
   

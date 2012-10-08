@@ -14,6 +14,7 @@ class Campaign < ActiveRecord::Base
   before_validation :set_slug
   after_create      :create_app
   before_update     :change_plan
+  before_update     :change_theme  
   before_destroy    :destroy_app
   
   def serializable_hash(options = {})
@@ -74,7 +75,7 @@ class Campaign < ActiveRecord::Base
     if self.theme_was != self.theme && self.status == ONLINE
       set_status PENDING    
       Delayed::Job.enqueue(Jobs::ChangeTheme.new(self.slug, self.theme))
-      self.theme = self.plan_theme
+      self.theme = self.theme_was
     end
   end
   

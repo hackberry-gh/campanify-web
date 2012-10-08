@@ -207,6 +207,7 @@ module Campanify
       def change_theme(campaign, theme)
         begin
           capified = system("cap campanify:change_theme -s slug=#{campaign.slug} -s theme=#{theme}")
+          return {campaign: campaign}
         rescue Exception => e
           puts "ERROR ON CHANGE THEME #{e}"
           return {error: e, theme: theme, campaign: campaign}              

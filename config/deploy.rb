@@ -7,7 +7,7 @@ set :rvm_ruby_string, 'ruby-1.9.3-p194@campanify'
 set :rvm_type, :user  # Don't use system-wide RVM
 
 default_run_options[:shell] = 'bash'
-# set :bundle_cmd, 'source $HOME/.bashrc && bundle'
+set :bundle_cmd, 'source $HOME/.bashrc && bundle'
 
 set :default_environment, {
     'PATH' => "/home/campanify/.rvm/gems/ruby-1.9.3-p194@campanify/bin:/home/campanify/.rvm/gems/ruby-1.9.3-p194@global/bin:/home/campanify/.rvm/rubies/ruby-1.9.3-p194/bin:/home/campanify/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games",
@@ -43,14 +43,6 @@ namespace :campanify do
     target_file_name = "#{app_dir}/config/settings.yml"
     put_respons = put content, target_file_name    
     puts "=== SETTINGS.YML GENERATED ==="
-
-    # file_name = "#{rails_root}/lib/templates/env"
-    # content = File.read(file_name)
-    # content = content.gsub(/free/, campaign_plan)      
-    # content = content.gsub(/bucket/, "campanify_app_#{slug_underscore}")                
-    # target_file_name = "#{app_dir}/.env"
-    # put_respons = put content, target_file_name    
-    # puts "=== .ENV GENERATED ==="
     
     file_name = "#{rails_root}/lib/templates/asset_sync.yml"
     content = File.read(file_name)
@@ -69,7 +61,7 @@ namespace :campanify do
     run "cd #{app_dir} && git remote rm heroku"
     run "cd #{app_dir} && git remote add heroku git@heroku.com:#{slug}.git"           
     run "cd #{app_dir} && git remote add origin git@heroku.com:campanify-app.git"               
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle"
+    run "cd #{app_dir} && #{bundle_cmd}"
     run "cd #{app_dir} && git add ."
     run "cd #{app_dir} && git commit -am 'clonned'"
     run "cd #{app_dir} && git push heroku master"
@@ -77,28 +69,28 @@ namespace :campanify do
   
   task :setup_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:migrate --app #{slug} --trace"
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed:original --app #{slug} --trace"    
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku run rake db:migrate --app #{slug} --trace"
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku run rake db:seed:original --app #{slug} --trace"    
   end
   
   task :backup_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pgbackups:capture --expire --app #{slug}"
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku pgbackups:capture --expire --app #{slug}"
   end
   
   task :wait_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pg:wait --app #{slug}"
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku pg:wait --app #{slug}"
   end  
   
   task :restore_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pgbackups:restore #{target_db} --confirm #{slug} --app #{slug}"
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku pgbackups:restore #{target_db} --confirm #{slug} --app #{slug}"
   end
   
   task :promote_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
-    run "cd #{app_dir} && source $HOME/.bashrc && heroku pg:promote #{target_db} --app #{slug}"
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku pg:promote #{target_db} --app #{slug}"
   end  
   
   task :remove_app, :roles => :campanify do
@@ -108,7 +100,9 @@ namespace :campanify do
   
   task :update_app, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"    
-    run "cd #{app_dir} && git pull origin master"    
+    run "cd #{app_dir} && git pull origin master" 
+    run "cd #{app_dir} && #{bundle_cmd}"
+    run "cd #{app_dir} && git commit -am 'updated'"   
     run "cd #{app_dir} && git push heroku master"    
   end
   
@@ -127,8 +121,8 @@ namespace :campanify do
     run "cd #{app_dir} && git add ."    
     run "cd #{app_dir} && git commit -am 'changed to #{theme}' --amend"
     run "cd #{app_dir} && git push heroku master --force"    
-    run "cd #{app_dir} && source $HOME/.bashrc && bundle exec heroku run rake db:seed:themes_#{theme}_install --app #{slug} --trace"     
-    puts "== THEME CHANGING COMPLETE #{theme}"    
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku run rake db:seed:themes_#{theme}_install --app #{slug} --trace"     
+    puts "=== THEME CHANGING COMPLETE #{theme} ==="    
   end
   
 end

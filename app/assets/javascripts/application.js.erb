@@ -32,19 +32,22 @@ $(document).ready(function(){
 		unbind('ajax:beforeSend').
 		on('ajax:beforeSend', function(event, data, status) {
 			$(this).find(".alert").remove();
-			var submit = $(this).find("input[type=submit]");
-			submit.data("val", submit.val()).attr('disabled',true).val('...');
+			var submit = $(this).find("button[type=submit]");
+			submit.data("val", submit.text()).attr('disabled',true).text('...');
 		}).
 		unbind('ajax:error').		
 		on('ajax:error', function(event, xhr, status) {
-			var submit = $(this).find("input[type=submit]");
+			var submit = $(this).find("button[type=submit]");
 			$("body").prepend($("#campaigns_template_error").html().
 								replace(/\${message}/, $.errorList(xhr.responseText)));
-			submit.removeAttr('disabled').val(submit.data('val'));
+			submit.removeAttr('disabled').text(submit.data('val'));
 		}).
 		unbind('ajax:success').				
 		on("ajax:success", function(event, data, status) {
+			
 			var form = $(this);
+			var submit = form.find("button[type=submit]");
+			submit.removeAttr('disabled').text(submit.data('val'));
 			form.find("#campaign_name").val("");
 			form.find("#campaign_plan").val("");		
 			form.prepend( $( $("#campaigns_template_success").html()).hide().fadeIn() );

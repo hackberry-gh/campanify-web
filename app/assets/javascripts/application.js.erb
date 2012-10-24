@@ -119,7 +119,8 @@ $(document).ready(function(){
 	$.setCampaignRowStatus = function(tr) {
 		if (tr.find(".status").text() != "online") {
 			tr.find(".visit").html("...");
-			if(tr.find(".status").text() == "deleted" )
+			tr.find(".manage").html("...");			
+			if (tr.find(".status").text() == "deleted" )
 				tr.find(".actions").html('');			
 			else
 				tr.find(".actions").html('<%= image_tag "ajax-loader.gif" %>');

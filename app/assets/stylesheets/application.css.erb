@@ -70,7 +70,7 @@ body{
 	bottom:4px;
 }
 .welcome form input[type=email] {
-	min-width:246px;
+	width: auto;
 }
 .well.form{
 	width:75%;
@@ -102,16 +102,20 @@ li.campaign span a{
 .popover{
 	width:auto;
 }
+.navbar-fixed-top{
+	margin-bottom:0px;
+}
 @media (max-width: 767px) { 
-
 }
 
 @media (max-width: 568px) { 
-	.welcome form input[type=submit] {
-		margin-top:0.5em;
-	}
 }
 
 @media (max-width: 320px) { 
-	
+	.welcome form input[type=email] {
+		display:block;
+	}
+	.welcome form input[type=submit] {
+		margin-top:0.5em;
+	}	
 }

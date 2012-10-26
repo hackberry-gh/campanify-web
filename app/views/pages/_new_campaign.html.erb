@@ -1,3 +1,4 @@
+<div class="well form">
 <h1>Let's make the world more peaceful place</h1>
 <%= form_for Campaign.new, 
 :remote => true, 
@@ -10,3 +11,4 @@
 	<%= f.select :plan, Campanify::Plans.all.delete_if{|p| p != "free"}, :include_blank => "Select your plan" %>
   <button type="submit" class="btn btn-primary" style="margin-bottom:9px">Start!</button>
 <% end %>
+</div>

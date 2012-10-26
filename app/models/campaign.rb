@@ -40,6 +40,7 @@ class Campaign < ActiveRecord::Base
         @price = addon_price < 0 ? 0 : addon_price
         Rails.cache.write("#{self.slug}-price", @price)
       end
+      @price      
     else
       0
     end

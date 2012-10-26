@@ -93,9 +93,12 @@ $(document).ready(function(){
 		unbind("ajax:success").				
 		on("ajax:success", function(event, data, status) {
 			// console.log($(this))
-			var tr = $(this).parents("tr");
+			var tr = $(this).parents("li");
 			tr.fadeOut(function () { tr.remove() });
 		});
+		
+		$('a[rel=tooltip]').tooltip();
+		$('a[rel=popover]').popover();
 	
 	}
 	
@@ -124,8 +127,8 @@ $(document).ready(function(){
 				tr.find(".actions").html('');			
 			else
 				tr.find(".actions").html('<%= image_tag "ajax-loader.gif" %>');
-			tr.find(".change_campaign_plan").parents("td").text(tr.find(".plan").data("plan"));
-			tr.find(".change_campaign_theme").parents("td").text(tr.find(".theme").data("theme"));
+			tr.find(".change_campaign_plan").parents("span").text(tr.find(".plan").data("plan"));
+			tr.find(".change_campaign_theme").parents("span").text(tr.find(".theme").data("theme"));
 		}else{
 			tr.find(".change_campaign_plan").val(tr.find(".plan").data("plan"));
 			tr.find(".change_campaign_theme").val(tr.find(".theme").data("theme"));					
@@ -136,9 +139,9 @@ $(document).ready(function(){
 		
 		var campaigns_tr = 	$.parseCampaignRowTmp(campaign);
 		
-	  $("tr#campaign_" + campaign.id).replaceWith(campaigns_tr);
+	  $("li#campaign_" + campaign.id).replaceWith(campaigns_tr);
 	
-		$.setCampaignRowStatus( $("tr#campaign_" + campaign.id) );
+		$.setCampaignRowStatus( $("li#campaign_" + campaign.id) );
 		
 		$.initEvents();		
 	}
@@ -160,7 +163,7 @@ $(document).ready(function(){
 
 				$(".main").html(campaigns_table);
 				
-				$("tr.campaign").each(function(){
+				$("li.campaign").each(function(){
 					$.setCampaignRowStatus($(this));
 				});
 
@@ -169,31 +172,7 @@ $(document).ready(function(){
 		
 	}
 	
-	$("#menu").data("off", false);
-	
-	$.toggleMenu = function(){
-		$("#menu li:not(.nav-header)").toggle();
-		$("#menu").data("off", !$("#menu").data("off") );
-	}
-	
-	$.onResize = function(){
-		var w = $(window).width();
-		if( w > 767 && $("#menu").data("off") == true ){
-			$("#menu li:not(.nav-header)").show();
-			$("#menu").data("off", false);
-			$("#menu .nav-header").unbind('click');		
-		}else if ( w <= 767 && $("#menu").data("off") == false  ) {
-			$("#menu li:not(.nav-header)").hide();
-			$("#menu").data("off", true);	
-			$("#menu .nav-header").click($.toggleMenu);				
-		}
-	}
-	
-	$(window).resize($.onResize);	
-	
-	$.onResize();
-	
-	$("#menu a").click(function(){
+	$(".navbar a").click(function(){
 
 		var href = $(this).attr("href");
 		

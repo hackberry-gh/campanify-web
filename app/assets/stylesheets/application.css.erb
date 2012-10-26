@@ -32,153 +32,83 @@
 	height:48px;
 	display:inline-block;
 }
-.btn-primary {
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #da4f49;
-  *background-color: #bd362f;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
-  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
-  background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
-  background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
-  background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
-  background-repeat: repeat-x;
-  border-color: #bd362f #bd362f #802420;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
-  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+.logo-24{
+	background:url('<%= image_path "campanify-logo-24.png" %>') no-repeat;
+	width:18px;
+	height:24px;
+	display:inline-block;
 }
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary.active,
-.btn-primary.disabled,
-.btn-primary[disabled] {
-  color: #ffffff;
-  background-color: #bd362f;
-  *background-color: #a9302a;
+.logo-16{
+	background:url('<%= image_path "campanify-logo-16.png" %>') no-repeat;
+	width:12px;
+	height:16px;
+	display:inline-block;
 }
-.flash{
-	margin:0 !important;
-	-webkit-border-radius: 0px;
-	-moz-border-radius: 0px;
-	border-radius: 0px;
+body{
+	margin-top:40px;
+	background:#F5F5F5;	
 }
-a, a:hover, a:visited, a:active {
-	color:#BD2A29;
-}
-
-.welcome body{
-	background: #272727;
-}
-/*.application, .application body, .application .container-fluid, .application .row-fluid, .application .sidebar{
-	height:100%;
-}*/
-
-.welcome body{
-	padding-left: 0;
-	padding-right: 0;	
-}
-.welcome .container-fluid{
-	padding-left: 0;
-	padding-right: 0;
-}
-.page{
-	background: #FFF;
-}
-.welcome .main{
-	padding-top: 40px;
-	text-align: center;
-}
-/*.sidebar{
-	border-right:1px solid #F5F5F5;
-}*/
-footer{
+.welcome{
 	text-align:center;
-	margin-bottom: 24px;
+	background:#F5F5F5;
 }
-.change_campaign_plan, .change_campaign_theme{
-	vertical-align:top;
-	height:27px;
-	margin-bottom:0;
+.navbar{
+	position: fixed;
+	width: 100%;
+	left:0;
+	top:0;
+	font-size:0.9em;
 }
-
-/* SIGN IN */
-.remember_me{
-	display: inline-block;
-	margin-right: 30px;
-	position: relative;
-	top: 2px;
+.navbar-inner{
+	border-radius:0px;
+}
+#uvTab{
+	top:auto !important;
+	bottom:4px;
+}
+.welcome form input[type=email] {
+	min-width:246px;
+}
+.well.form{
+	width:75%;
+	margin:20px auto;
 }
 .loading{
-	position:fixed;
-	width:100%;
-	height:100%;
-	z-index:9;	
-}
-.loading img{
-	position:fixed;
 	top:50%;
 	left:50%;
+	position:absolute;
 	margin:-8px 0 0 -8px;
-	z-index:10;
 }
-#menu .icon-chevron-down{
-	margin-top: 36px;
+ul.campaigns{
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+li.campaign{
+	padding:0.5em;
+	border:1px solid #FFF;
+	border-bottom:1px solid #c8c8c8;
+}
+li.campaign span{
+	display:inline-block;
+	margin-right:4px;
+}
+li.campaign span a{
+	padding-left:4px;
+}
+.popover{
+	width:auto;
 }
 @media (max-width: 767px) { 
-	.welcome .main{
-		padding-top:10px;
-	}
-	.welcome #mc-embedded-subscribe-form{
-		margin:0;
-	}
-	#menu .nav-header{
-		cursor:pointer;
-		border-bottom:1px solid #bd2a29;
-	}
-	input#mce-EMAIL{
-		width:136px !important;
-	}
-	#uvTab{
-		display:none !important;
-	}
+	
 }
+
 @media (max-width: 568px) { 
-	.table th, .table td{
-		font-size:12px;
-		line-height:14px;		
-	}
-	.table th, .table td select{
-		font-size:12px;
-		line-height:14px;
-		width: 56px;
-		height:18px;
-	}
-	.table th, .table td .btn{
-		font-size:12px;
-		line-height:14px;
-		height:14px;		
-		padding:2px;		
+	.welcome form input[type=submit] {
+		margin-top:0.5em;
 	}
 }
+
 @media (max-width: 320px) { 
-	.table th, .table td{
-		padding:1px;
-		font-size:10px;
-		line-height:12px;		
-	}
-	.table th, .table td select{
-		font-size: 10px;
-		width: 48px;
-		height:14px;
-	}
-	.table th, .table td .btn{
-		font-size: 10px;
-		padding: 1px;
-		height:14px;		
-	}
-	.table th, .table td img{
-		width:10px;
-		height:auto;
-	}
+	
 }

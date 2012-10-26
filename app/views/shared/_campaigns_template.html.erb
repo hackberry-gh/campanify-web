@@ -1,49 +1,41 @@
 <script id="campaigns_template_table" type="text/x-jquery-tmpl">
 <h1>My Campaings</h1>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Visit</th>
-      <th>Admin</th>				
-      <th>Name</th>
-      <th>Plan</th>
-      <th>Status</th>
-      <th>Theme</th>
-      <th>Price</th>
-      <th></th>				
-    </tr>
-  </thead>
-  <tbody>
+<ul class="campaigns">
 	${list}
-  </tbody>
-</table>
+</ul>
 </script>
 <script id="campaigns_template_tr" type="text/x-jquery-tmpl">
-<tr id="campaign_${id}" class="campaign ${campaign_class}">
-	<td class="visit"><a href="http://${slug}.campanify.it" target="_blank">visit</a></td>
-	<td class="manage"><a href="http://${slug}.campanify.it/admin" target="_blank">manage</a></td>	
-  <td class="name">${name}</td>
-  <td class="plan" data-plan="${plan}">
-	<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
+<li id="campaign_${id}" class="campaign ${campaign_class}">
+	<span class="visit">
+		<a href="http://${slug}.campanify.it" target="_blank" rel="tooltip" title="Visit Site">${name}</a>
+	</span>
+	<div class="actions pull-right">
+  <span class="status">${status}</span>	
+  <span class="price">${price}$</span>
+
+	<span class="manage"><a href="http://${slug}.campanify.it/admin" target="_blank" rel="tooltip" title="Manage Site"><i class="icon-asterisk"></i></a></span>	
+	
+  <span class="plan" data-plan="${plan}">
+	<a href="#" rel="popover" data-original-title="Change Plan" data-html="true" data-placement="left" data-content='<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
 	<option value="free">free</option>		
 	<!--<option value="town">town</option>
 	<option value="city">city</option>
 	<option value="country">country</option>
 	<option value="earth">earth</option>-->
-	</select>
-	</td>
-  <td class="status">${status}</td>
-  <td class="theme" data-theme="${theme}">
+	</select>'><i class="icon-flag"></i></a>
+	</span>
+
+  <span class="theme" data-theme="${theme}">
+	<a href="#" rel="popover" data-original-title="Change Theme" data-placement="left" data-html="true" data-content='
 	<select class="change_campaign_theme input input-small campaign_theme_small" data-id="${id}">
 	<option value="default">default</option>		
 	<option value="naked">naked</option>
-	</select>
-	</td>
-  <td class="price">${price}</td>
-  <td class="actions">
-		<a href="/api/campaigns/${id}" class="btn btn-small btn-danger destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?">delete</a>		
-	</td>			
-</tr>
+	</select>'><i class="icon-eye-open"></i></a>
+	</span>
+
+	<a href="/api/campaigns/${id}" rel="tooltip" title="Destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?"><i class="icon-remove"></i></a>		
+	</div>		
+</li>
 </script>
 <script id="campaigns_template_error" type="text/x-jquery-tmpl">
 <div class="alert flash">
@@ -54,6 +46,6 @@
 <script id="campaigns_template_success" type="text/x-jquery-tmpl">
 <div class="alert alert-success">
 <button type="button" class="close" data-dismiss="alert">×</button>
-Your campaign is been creating, it takes several minutes, you can track its status by clicking `My Campaign` on the left.
+Your campaign is been creating, it takes several minutes, you can track its status by clicking `My Campaign` on the menu.
 </div>
 </script>

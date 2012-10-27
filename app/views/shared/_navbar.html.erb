@@ -1,4 +1,4 @@
-<div class="navbar navbar-fixed-top navbar-inverse">
+<div class="mainmenu navbar navbar-fixed-top navbar-inverse">
   <div class="navbar-inner">
     <div class="container">
  
@@ -10,8 +10,10 @@
       </a>
  
       <!-- Be sure to leave the brand out there if you want it shown -->
-      <a class="brand" href="/"><i class="logo-16"></i></a>
- 
+      <a class="brand" href="/"><%= image_tag "logo/128.png", :class => "logo-48" %></i></a>
+ 			
+			<% if current_user %><span class="current-user"><%= current_user.email %></span><% end %>
+
       <!-- Everything you want hidden at 940px or less, place within here -->
       <div class="nav-collapse">
         <!-- .nav, .navbar-search, .navbar-form, etc -->
@@ -20,7 +22,6 @@
 				  <li><a href="#pages/new_campaign">New Campaign</a></li>
 				  <li><a href="#my_campaigns">My Campaigns</a></li>
 					<li class="divider-vertical"></li>
-					<li><p class="navbar-text"><%= current_user.email %></p></li>				
 					<li><a href="<%= destroy_user_session_path %>" data-method="delete">Sign out</a></li>
 					<% else %>
 					<li><%= link_to "Sign In", new_user_session_path %></li>

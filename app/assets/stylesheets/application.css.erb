@@ -13,69 +13,89 @@
  *= require_self
  */
 
-.logo-96{
-	background:url('<%= image_path "campanify-logo-96.png" %>') no-repeat;
-	width:193px;
-	height:97px;
-	display:inline-block;
-}
-.logo-96.small{
-	background:url('<%= image_path "campanify-logo-96.png" %>') no-repeat;
-	width:96.5px;
-	height:48px;
-	display:inline-block;
-	background-size:100%;
-}
-.logo-48{
-	background:url('<%= image_path "campanify-logo-48.png" %>') no-repeat;
-	width:36px;
-	height:48px;
-	display:inline-block;
-}
-.logo-24{
-	background:url('<%= image_path "campanify-logo-24.png" %>') no-repeat;
-	width:18px;
-	height:24px;
-	display:inline-block;
-}
-.logo-16{
-	background:url('<%= image_path "campanify-logo-16.png" %>') no-repeat;
-	width:12px;
-	height:16px;
-	display:inline-block;
-}
+
 body{
-/*	margin-top:40px;*/
+
 	background:#F5F5F5;	
 }
-.container-fluid{
-	margin-top:40px;
+.logo-48{
+	width:96px;
+	height:48px;
 }
-.welcome{
-	text-align:center;
-	background:#F5F5F5;
+.flag-256{
+	width:256px;
+	height:256px;
+}
+.navbar .brand{
+	position:absolute;
+	bottom: -28px;
+	z-index:2000;
+}
+.navbar-fixed-top{
+	position:static;
+	margin-bottom: 20px;
 }
 .navbar{
-/*	position: fixed;
-	width: 100%;
-	left:0;
-	top:0;*/
+	border-bottom:22px solid #FFA915;
 	font-size:0.9em;
 }
 .navbar-inner{
 	border-radius:0px;
 }
+.navbar .container{
+	position:relative;
+}
+.navbar .current-user{
+	position: absolute;
+	bottom: -22px;
+	right: 12px;
+	color: #222;
+	font-size: 0.9em;
+}
+
+.flash{
+	margin-top: -20px;
+}
+
 #uvTab{
 	top:auto !important;
 	bottom:4px;
 }
-.welcome form input[type=email] {
-	width: auto;
+
+.welcome{
+	height:256px;
 }
+.welcome .info{
+	text-align: right;
+	margin-top:12px;	
+}
+.welcome .flag{
+	text-align: center;
+}
+.welcome .newsletter{
+	text-align: left;
+	margin-top:64px;
+}
+
 .well.form{
-	width:75%;
-	margin:20px auto;
+	margin:0 auto;
+	width:256px;
 }
+.well.form.new-campaign{
+	width:512px;
+}
+#error_explanation{
+	padding: 8px 35px 8px 14px;
+	margin-bottom: 20px;
+	color: #C09853;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	background-color: #FCF8E3;
+	border: 1px solid #FBEED5;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
 .loading{
 	top:50%;
 	left:50%;
@@ -88,9 +108,10 @@ ul.campaigns{
 	padding:0;
 }
 li.campaign{
-	padding:0.5em;
-	border:1px solid #FFF;
-	border-bottom:1px solid #c8c8c8;
+	padding: 0.5em;
+	border: 1px solid #C8C8C8;
+	border-bottom: 1px solid #F0F0F0;
+	background: white;
 }
 li.campaign span{
 	display:inline-block;
@@ -102,20 +123,72 @@ li.campaign span a{
 .popover{
 	width:auto;
 }
-.navbar-fixed-top{
-	margin-bottom:0px;
+
+@media (max-width: 979px) { 
+	li.campaign span.visit{
+		max-width:90px;
+		overflow:hidden;
+	}
+	.well.form.new-campaign {
+	width: 100%;
+	}
+	.navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
+	padding: 0 5px;
+	}
+	.navbar .brand{
+		bottom: -51px;
+	}
+	.navbar .container{
+		margin-bottom:24px;
+	}
+	.flag-256{
+		width:100%;
+		height:auto;
+	}
+	.well.form{
+		width:100%;
+		background:none;
+		
+		min-height: 20px;
+		padding: 0;
+		margin-bottom: 20px;
+
+		border: none;
+
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	}
 }
+
 @media (max-width: 767px) { 
+	.welcome .info{
+		text-align: left;
+		margin-top:0;	
+	}
+	.welcome .flag{
+		text-align: center;
+	}
+	.welcome .newsletter{
+		text-align: left;
+		margin-top:0;
+		padding-bottom:24px;
+	}
+	.flag-256{
+		width:256px;
+		height:256px;
+		min-width:256px;
+		min-height:256px;		
+		max-width:256px;
+		max-height:256px;		
+	}
 }
 
 @media (max-width: 568px) { 
 }
 
 @media (max-width: 320px) { 
-	.welcome form input[type=email] {
-		display:block;
-	}
-	.welcome form input[type=submit] {
-		margin-top:0.5em;
+	#uvTab{
+		display:none !important;
 	}	
 }

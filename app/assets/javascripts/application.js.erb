@@ -38,8 +38,11 @@ $(document).ready(function(){
 		unbind('ajax:error').		
 		on('ajax:error', function(event, xhr, status) {
 			var submit = $(this).find("button[type=submit]");
-			$("body").prepend($("#campaigns_template_error").html().
-								replace(/\${message}/, $.errorList(xhr.responseText)));
+			// $("body").prepend($("#campaigns_template_error").html().
+			// 					replace(/\${message}/, $.errorList(xhr.responseText)));
+			var errs = $($("#campaigns_template_error").html().
+									replace(/\${message}/, $.errorList(xhr.responseText)));
+			errs.insertAfter($(".mainmenu"));								
 			submit.removeAttr('disabled').text(submit.data('val'));
 		}).
 		unbind('ajax:success').				
@@ -86,8 +89,9 @@ $(document).ready(function(){
 		on('ajax:error', function(event, xhr, status) {
 
 			var a = $(this);
-			$("body").prepend($("#campaigns_template_error").html().
-								replace(/\${message}/, $.errorList(xhr.responseText)));
+			var errs = $($("#campaigns_template_error").html().
+									replace(/\${message}/, $.errorList(xhr.responseText)));
+			errs.insertAfter($(".mainmenu"));
 			a.removeAttr('disabled').text(a.data('val'));
 		}).
 		unbind("ajax:success").				

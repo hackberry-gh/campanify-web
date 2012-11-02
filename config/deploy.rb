@@ -103,7 +103,7 @@ namespace :campanify do
     run "cd #{app_dir} && git pull origin master" 
     run "cd #{app_dir} && #{bundle_cmd}"
     run "cd #{app_dir} && git commit -am 'updated'"   
-    run "cd #{app_dir} && git push heroku master"    
+    # run "cd #{app_dir} && git push heroku master"    
   end
   
   task :push_app, :roles => :campanify do

@@ -41,6 +41,7 @@ namespace :campanify do
   task :update_all => :environment do
     Campaign.all.each do |app|
       system("cap campanify:update_app -s slug=#{app.slug}")
+      system("cap campanify:push_app -s slug=#{app.slug}")      
     end
   end
   

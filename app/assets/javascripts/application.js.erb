@@ -200,4 +200,87 @@ $(document).ready(function(){
 
 	$.initEvents();	
 	
+	$.calculatePrice  = function() {
+		
+		var ps_count = 	Number($("#ps-web").val()) + Number($("#ps-worker").val());
+		var base = ps_count > 1 ? (Number(ps_count) * 4000) + 4000 : 0;
+		
+		var amount = 	Number(base) + 
+									Number($("select#postgres").val()) + 
+									Number($("select#sendgrid").val()) + 
+									(Number($("select#support").val()) * 7000);
+
+		$("#amount").text(amount/100);
+
+	}
+	
+	if( $("body").hasClass("plans") ) {
+		var postgres = {
+			"dev" : ["level 01", "10,000 row limit","0 MB cache"],
+			"basic" : ["level 02", "10 million row limit","0 MB cache"],
+			"crane" : ["level 03", "Unlimited", "0.4 GB cache"],								
+			"kappa" : ["level 04", "Unlimited", "0.8 GB cache"],
+			"ronin" : ["level 05", "Unlimited", "1.7 GB cache"],
+			"fugu" : ["level 06", "Unlimited", "3.75 GB cache"],
+			"ika" : ["level 07", "Unlimited", "7.5 GB cache"],
+			"zilla" : ["level 08", "Unlimited", "17 GB cache"],								
+			"baku" : ["level 09", "Unlimited", "34 GB cache"],
+			"mecha" : ["level 10", "Unlimited", "68 GB cache"]
+		}
+		
+		var sendgrid = {
+			"starter" : ["level 01", "200 emails per day"],
+			"bronze" : ["level 02", "40,000 emails per month"],
+			"silver" : ["level 03", "100,000 emails per month"],
+			"gold" : ["level 04", "300,000 emails per month"],
+			"platinum" : ["level 05", "700,000 emails per month"]
+		}
+		
+		$.get("/pages/addons",function(data){
+
+			$("select#postgres").change(function(){
+				$("#postgres_desc").text( postgres[$("select#postgres option:selected").data("name")].join(",") );
+			});
+			$("select#sendgrid").change(function(){
+				$("#sendgrid_desc").text( sendgrid[$("select#sendgrid option:selected").data("name")].join(",") );
+			});
+			
+			$("#ps-web, #ps-worker, select#postgres, select#sendgrid, select#support").change(function(){
+				$.calculatePrice();
+			});
+						
+			for( var i = 0; i < data.length; i++) {
+				var addon = data[i];
+				if ( addon.name.indexOf('heroku-postgresql') > -1 ) {
+					var name = addon.name.replace('heroku-postgresql:','');
+					$("select#postgres").append($("<option value='"+addon.price.cents+"' data-name='"+name+"'>"+postgres[name].shift()+"</option>"))
+					
+				}
+				
+				if ( addon.name.indexOf('sendgrid') > -1 ) {
+					var name = addon.name.replace('sendgrid:','');
+					$("select#sendgrid").append($("<option value='"+addon.price.cents+"' data-name='"+name+"'>"+sendgrid[name].shift()+"</option>"))
+					
+				}
+			}
+			
+			$("select#postgres").val("0");
+			$.calculatePrice();		
+			
+			function NASort(a, b) {    
+			    if (a.innerHTML == 'NA') {
+			        return 1;   
+			    }
+			    else if (b.innerHTML == 'NA') {
+			        return -1;   
+			    }       
+			    return (a.innerHTML > b.innerHTML) ? 1 : -1;
+			};
+
+			$('select#postgres option').sort(NASort).appendTo('select#postgres');
+			$('select#sendgrid option').sort(NASort).appendTo('select#sendgrid');
+			
+		});
+	}
+	
 });

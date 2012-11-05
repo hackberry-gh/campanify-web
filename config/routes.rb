@@ -1,6 +1,8 @@
 CampanifyWeb::Application.routes.draw do
 
-  resources :pages, :only => [:index, :show]
+  resources :pages, :only => [:index, :show] do
+    get :addons, :on => :collection
+  end
 
   devise_for :users, :skip => [:registrations]
 

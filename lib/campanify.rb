@@ -45,7 +45,7 @@ module Campanify
             "newrelic" => "standard"
           },
           db: 'heroku-postgresql:dev',    
-          campanify_fee: 0
+          support: 0
         },
         town: {
           ps: {
@@ -59,7 +59,7 @@ module Campanify
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:basic',     
-          campanify_fee: 7000
+          support: 1
         },
         city: {
           ps: {
@@ -73,7 +73,7 @@ module Campanify
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:crane',
-          campanify_fee: 14000
+          support: 3
         },
         country: {
           ps: {
@@ -87,7 +87,7 @@ module Campanify
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:kappa',
-          campanify_fee: 28000
+          support: 3
         },
         earth: {
           ps: {
@@ -101,7 +101,7 @@ module Campanify
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:ronin',
-          campanify_fee: 56000
+          support: 7
         }
       }[plan]
       end

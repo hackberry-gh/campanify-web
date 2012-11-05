@@ -30,14 +30,24 @@ class Campaign < ActiveRecord::Base
     Pusher['campaigns'].trigger('update', self)
   end
   
+  def heroku_price
+    addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}
+    ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
+    addon_price + ps_price
+  end
+  
   def price
     if self.status == ONLINE
       unless @price = Rails.cache.read("#{self.slug}-price")
-        addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}
-        ps_price = (heroku.get_ps(Campaign.first.slug).body.count - 1) * 3500
-        campanify_price = Campanify::Plans.configuration(plan.to_sym)[:campanify_fee]
-        addon_price + ps_price + campanify_price
-        @price = addon_price < 0 ? 0 : addon_price
+
+        ps_count = heroku.get_ps(Campaign.first.slug).body.count
+        
+        base_price = ps_count > 1 ? (ps_count * 4000) + 4000 : 0
+        addon_price = heroku.get_addons(slug).body.sum{|addon| addon["price"]["cents"]}                
+        support_price = Campanify::Plans.configuration(plan.to_sym)[:support] * 7000
+               
+        @price = base_price + addon_price + support_price
+        
         Rails.cache.write("#{self.slug}-price", @price)
       end
       @price      

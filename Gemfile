@@ -12,6 +12,8 @@ gem 'delayed_job_active_record'
 gem 'aws-s3', :require => "aws/s3"
 gem 'pusher'
 gem 'colored'
+gem 'memcachier'
+gem 'dalli'
 
 group :assets do
   gem 'sass-rails',   							'~> 3.2.3'

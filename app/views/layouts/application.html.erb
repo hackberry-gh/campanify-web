@@ -6,18 +6,24 @@
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   	<%= stylesheet_link_tag    "application", :media => "all" %>
   </head>
-  <body>
+  <body class="<%= params[:controller] %> <%= params[:action] %> <%= params[:id] %>">
 	
 		<%= render "shared/navbar" %>
 			
 		<%= render "shared/flash" %>
 						
-		<div class="container-fluid">
+		<div id="wrap" class="container-fluid">
 		  <div class="row-fluid">
 		    <div class="main span12">
 		      <%= yield %>
 		    </div>
 		  </div>
+		</div>
+		
+		<div id="footer">
+			<div class="container">
+				<p class="muted credit"><a href="mailto:info@campanify.it">Contact</a><span class="pull-right">Hackberry Limited &copy; 2012.</span></p>
+			</div>
 		</div>
 		
 		<%= render "shared/campaigns_template" %>

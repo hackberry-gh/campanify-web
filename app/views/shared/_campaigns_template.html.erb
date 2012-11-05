@@ -17,11 +17,13 @@
 	
   <span class="plan" data-plan="${plan}">
 	<a href="#" rel="popover" data-original-title="Change Plan" data-html="true" data-placement="left" data-content='<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
-	<option value="free">free</option>		
-	<!--<option value="town">town</option>
+	<option value="free">free</option>	
+	<% if current_user && current_user.level > 0 %>	
+	<option value="town">town</option>
 	<option value="city">city</option>
 	<option value="country">country</option>
-	<option value="earth">earth</option>-->
+	<option value="earth">earth</option>
+	<% end %>
 	</select>'><i class="icon-flag"></i></a>
 	</span>
 

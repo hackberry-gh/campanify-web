@@ -8,7 +8,7 @@
 } do |f| %>
 	<legend>Create your campaign and spread your word now.</legend>	
 	<%= f.text_field :name, :placeholder => "Name of Your Campaign" %>
-	<%= f.select :plan, Campanify::Plans.all.delete_if{|p| p != "free"}, :include_blank => "Select your plan" %>
+	<%= f.select :plan, plans_for_select, :include_blank => "Select your plan" %>
   <button type="submit" class="btn btn-primary" style="margin-bottom:9px">Start!</button>
 <% end %>
 </div>

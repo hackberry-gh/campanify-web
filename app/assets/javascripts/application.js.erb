@@ -203,11 +203,12 @@ $(document).ready(function(){
 	$.calculatePrice  = function() {
 		
 		var ps_count = 	Number($("#ps-web").val()) + Number($("#ps-worker").val());
-		var base = ps_count > 1 ? (Number(ps_count) * 4000) + 4000 : 0;
-		
+		var base = ps_count > 1 ? (Number(ps_count) * 4000) + 2000 : 0;
+		var addons = 	Number($("select#postgres").val()) + 
+									Number($("select#memcachier").val()) + 
+									Number($("select#sendgrid").val());
 		var amount = 	Number(base) + 
-									Number($("select#postgres").val()) + 
-									Number($("select#sendgrid").val()) + 
+									addons + 
 									(Number($("select#support").val()) * 7000);
 
 		$("#amount").text(amount/100);
@@ -241,11 +242,12 @@ $(document).ready(function(){
 			$("select#postgres").change(function(){
 				$("#postgres_desc").text( postgres[$("select#postgres option:selected").data("name")].join(",") );
 			});
+		
 			$("select#sendgrid").change(function(){
 				$("#sendgrid_desc").text( sendgrid[$("select#sendgrid option:selected").data("name")].join(",") );
 			});
 			
-			$("#ps-web, #ps-worker, select#postgres, select#sendgrid, select#support").change(function(){
+			$("#ps-web, #ps-worker, select#postgres, select#memcachier, select#sendgrid, select#support").change(function(){
 				$.calculatePrice();
 			});
 						
@@ -257,6 +259,12 @@ $(document).ready(function(){
 					
 				}
 				
+				if ( addon.name.indexOf('memcachier') > -1 ) {
+					var name = addon.name.replace('memcachier:','');
+					$("select#memcachier").append($("<option value='"+addon.price.cents+"' data-name='"+name+"'>"+name+"</option>"))
+					
+				}
+				
 				if ( addon.name.indexOf('sendgrid') > -1 ) {
 					var name = addon.name.replace('sendgrid:','');
 					$("select#sendgrid").append($("<option value='"+addon.price.cents+"' data-name='"+name+"'>"+sendgrid[name].shift()+"</option>"))
@@ -265,6 +273,8 @@ $(document).ready(function(){
 			}
 			
 			$("select#postgres").val("0");
+			$("select#memcachier").val("0");
+			$("select#sendgrid").val("0");			
 			$.calculatePrice();		
 			
 			function NASort(a, b) {    
@@ -279,6 +289,7 @@ $(document).ready(function(){
 
 			$('select#postgres option').sort(NASort).appendTo('select#postgres');
 			$('select#sendgrid option').sort(NASort).appendTo('select#sendgrid');
+			$('select#memcachier option').sort(NASort).appendTo('select#memcachier');			
 			
 		});
 	}

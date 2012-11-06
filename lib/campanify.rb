@@ -55,7 +55,7 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",
             "sendgrid" => "bronze",
-            "memcachier" => "100",
+            "memcachier" => "dev",
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:basic',     
@@ -69,11 +69,11 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",            
             "sendgrid" => "silver",
-            "memcachier" => "250",
+            "memcachier" => "100",
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:crane',
-          support: 3
+          support: 1
         },
         country: {
           ps: {
@@ -83,7 +83,7 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",            
             "sendgrid" => "gold",
-            "memcachier" => "500",
+            "memcachier" => "250",
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:kappa',
@@ -97,7 +97,7 @@ module Campanify
           addons: {
             "pgbackups" => "auto-week",            
             "sendgrid" => "platinum",
-            "memcachier" => "1000",
+            "memcachier" => "500",
             "newrelic" => "standard"            
           },
           db: 'heroku-postgresql:ronin',

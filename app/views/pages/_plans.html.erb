@@ -1,90 +1,92 @@
 <h2>PLANS</h2>
 <div class="plans row-fluid">
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Server Instance</th>
-			<th>Database</th>
-			<th>Memcache</th>			
-			<th>Emails</th>						
-			<th>Support</th>
-			<th>Price</th>			
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Free</td>
-			<td>1 Web Instance</td>
-			<td>10,000 row limit<br/>No Cache</td>
-			<td>25mb(dev)</td>
-			<td>Send 200 / day</td>						
-			<td>No support</td>
-			<td>$0</td>			
-		</tr>
-		<tr class="success">
-			<td>Town</td>
-			<td>2 Web Instance</td>
-			<td>10 million row limit<br/>No Cache</td>
-			<td>25mb(dev)</td>			
-			<td>Send 40,000 / month</td>						
-			<td>Email</td>
-			<td>$188.95* / month</td>			
-		</tr>
-		<tr class="error">
-			<td>City</td>
-			<td>3 Web Instance<br/>1 Worker Instance</td>
-			<td>Unlimited DB<br/>0.4 GB cache</td>
-			<td>100mb</td>						
-			<td>Send 100,000 / month</td>						
-			<td>Email</td>
-			<td>$394.95* / month</td>			
-		</tr>
-		<tr class="warning">
-			<td>Country</td>
-			<td>4 Web Instance<br/>2 Worker Instance</td>
-			<td>Unlimited DB<br/>0.8 GB cache</td>
-			<td>250mb</td>						
-			<td>Send 300,000 / month</td>						
-			<td>Email &amp; Skype</td>
-			<td>$794.95* / month</td>			
-		</tr>
-		<tr class="info">
-			<td>Earth</td>
-			<td>8 Web Instance<br/>4 Worker Instance</td>
-			<td>Unlimited DB<br/>1.7 GB cache</td>
-			<td>500mb</td>						
-			<td>Send 700,000 / month</td>						
-			<td>Email, Skype &amp; Basic phone</td>
-			<td>$1629.95* / month</td>			
-		</tr>
-		<tr class="custom">
-			<td>Custom</td>
-			<td>
+		<div class="span2">
+			<h5>Free</h5>
+			<ul>
+			<li>1 Web Instance<br/>&nbsp;</li>
+			<li>10,000 row limit<br/>No Cache</li>
+			<li>25mb(dev)</li>
+			<li>Send 200 / day</li>						
+			<li>No support<br/>&nbsp;</li>
+			<li>$0</li>
+			</ul>
+		</div>	
+		<div class="span2">
+			<h5>Town</h5>
+			<ul>
+			<li>2 Web Instance<br/>&nbsp;</li>
+			<li>10 million row limit<br/>No Cache</li>
+			<li>25mb(dev)</li>			
+			<li>Send 40,000 / month</li>						
+			<li>Email<br/>&nbsp;</li>
+			<li>$188.95* / month</li>
+			</ul>
+		</div>
+		<div class="span2">
+			<h5>City</h5>
+			<ul>			
+			<li>3 Web Instance<br/>1 Worker Instance</li>
+			<li>Unlimited DB<br/>0.4 GB cache</li>
+			<li>100mb</li>						
+			<li>Send 100,000 / month</li>						
+			<li>Email<br/>&nbsp;</li>
+			<li>$394.95* / month</li>
+			</ul>			
+		</div>
+		<div class="span2">
+			<h5>Country</h5>
+			<ul>			
+			<li>4 Web Instance<br/>2 Worker Instance</li>
+			<li>Unlimited DB<br/>0.8 GB cache</li>
+			<li>250mb</li>						
+			<li>Send 300,000 / month</li>						
+			<li>Email &amp; Skype<br/>&nbsp;</li>
+			<li>$794.95* / month</li>
+			</ul>			
+		</div>
+		<div class="span2">
+			<h5>Earth</h5>
+			<ul>
+			<li>8 Web Instance<br/>4 Worker Instance</li>
+			<li>Unlimited DB<br/>1.7 GB cache</li>
+			<li>500mb</li>						
+			<li>Send 700,000 / month</li>						
+			<li>Email, Skype<br/>Basic phone</li>
+			<li>$1629.95* / month</li>
+			</ul>
+		</div>
+		<div class="span2">
+			<h5>Custom</h5>
+			<ul>
+			<li>
 				<label>Web Instance</label>
 				<input type="number" max="100" min="1" id="ps-web" value="1" /><br/>
 				<label>Worker Instance</label>					
-				<input type="number" max="100" min="0" id="ps-worker" value="0" /></td>
-			<td>
-				<label>Database</label><br/><select id="postgres"></select><br/>
+				<input type="number" max="100" min="0" id="ps-worker" value="0" />
+			</li>
+			<li>
+				<label>Database</label>
+				<select id="postgres"></select>
 				<span id="postgres_desc"></span>
-			</td>
-			<td>
-				<label>Memcache</label><br/><select id="memcachier"></select><br/>
-			</td>			
-			<td>
-				<label>Emails</label></br><select id="sendgrid"><option value="0">None</option></select><br/>
+			</li>
+			<li>
+				<label>Memcache</label>
+				<select id="memcachier"></select>
+			</li>			
+			<li>
+				<label>Emails</label>
+				<select id="sendgrid"><option value="0">None</option></select>
 				<span id="sendgrid_desc"></span>
-			</td>						
-			<td><label>Support</label><br/><select id="support">
+			</li>						
+			<li><label>Support</label>
+				<select id="support">
 				<option value="0">None</option>
 				<option value="1">Email</option>
 				<option value="3">Email + Skype</option>								
 				<option value="7">Email + Skype + Phone</option>												
-			</select></td>
-			<td>$<span id="amount"></span>* / month</td>			
-		</tr>	
-	</tbody>
-</table>	
-<small>* Starts from indicated price, additional bandwidth and storage will be added to price on bill</small>
-</div>
+				</select>
+			</li>
+			<li>$<span id="amount"></span>* / month</li>
+			</ul>
+		</div>
+</div>		

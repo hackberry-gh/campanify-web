@@ -17,6 +17,10 @@
 body{
 	background:#F5F5F5;	
 }
+#wrap{
+	max-width:1024px;
+	margin:0 auto;
+}
 .logo-48{
 	width:96px;
 	height:48px;
@@ -61,7 +65,7 @@ body{
 	bottom:4px;
 }
 
-.welcome{
+/*.welcome{
 	min-height:256px;
 }
 .welcome .info{
@@ -75,7 +79,7 @@ body{
 	text-align: left;
 	margin-top:64px;
 }
-
+*/
 .well.form{
 	margin:0 auto;
 	width:256px;
@@ -158,10 +162,6 @@ li.campaign span a{
 	.navbar .container{
 		margin-bottom:24px;
 	}
-	.flag-256{
-		width:100%;
-		height:auto;
-	}
 	.well.form{
 		width:100%;
 		background:none;
@@ -182,8 +182,11 @@ li.campaign span a{
 	.features.span4.offset4{
 		margin-left:0;
 	}
+	hr{
+		display:none;
+	}
 	
-	.welcome .info{
+/*	.welcome .info{
 		text-align: left;
 		margin-top:0;	
 	}
@@ -194,14 +197,26 @@ li.campaign span a{
 		text-align: left;
 		margin-top:0;
 		padding-bottom:24px;
+	}*/
+	.hero-unit{
+		padding:0;
+		background:transparent;
+		text-align:center;
 	}
-	.flag-256{
+	.hero-unit .pull-left{
+		float:none;
+		margin:0 !important;
+	}	
+	.hero-unit p, .hero-unit h2{
+		text-align:left;
+	}
+	img.flag-256{
 		width:256px;
 		height:256px;
-		min-width:256px;
+/*		min-width:256px;
 		min-height:256px;		
 		max-width:256px;
-		max-height:256px;		
+		max-height:256px;		*/
 	}
 	#footer {
     margin-left: -20px;
@@ -218,4 +233,12 @@ li.campaign span a{
 	#uvTab{
 		display:none !important;
 	}	
+	img.flag-256{
+		width:100%;
+		height:auto;
+/*		min-width:100%;
+		min-height:auto;
+		max-width:100%;
+		max-height:auto;	*/			
+	}
 }

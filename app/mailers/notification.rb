@@ -6,6 +6,11 @@ class Notification < ActionMailer::Base
   #
   #   en.notification.new_campaign.subject
   #
+  def new_user(user)
+    @user = user    
+    mail to: user.email
+  end
+  
   def new_campaign(campaign, admin_password)
     @campaign = campaign
     @admin_password = admin_password

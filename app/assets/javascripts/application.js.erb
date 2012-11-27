@@ -179,6 +179,7 @@ $(document).ready(function(){
 	$(".navbar a").click(function(){
 
 		var href = $(this).attr("href");
+		console.log(href);
 		
 		if(!(href.indexOf("#") > -1)) return true;
 		
@@ -189,7 +190,7 @@ $(document).ready(function(){
 			$.myCampaigns();
 			break;
 			default:
-			$(".main").load(href.replace("#",""),function(){
+			$(".main").load(href.replace("#","/"),function() {
 				$.initEvents();
 			});
 			break;

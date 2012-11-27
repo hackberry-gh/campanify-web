@@ -1,0 +1,21 @@
+<p>Hi <%= @campaign.user.full_name %>, we have great news for you ;)<br/>
+Your new campaign named <%= @campaign.name %> is online and ready for your targets.
+</p>
+
+<h4>Here are some useful links</h4>
+<ul>
+	<li>
+		Your campaign url<br/>
+		<a href="http://<%= @campaign.slug%>.campanify.it">http://<%= @campaign.slug%>.campanify.it</a>
+	</li>
+	<li>
+		Administration<br/>
+		<a href="http://<%= @campaign.slug%>.campanify.it">http://<%= @campaign.slug%>.campanify.it/admin</a><br/>
+		<small>Admin account email is the same as your campanify.it email and the password is `<%= @admin_password %>`</small>
+	</li>
+	<li>
+		Documentation<br/>
+		<a href="http://<%= @campaign.slug%>.campanify.it">http://<%= @campaign.slug%>.campanify.it/docs</a>
+	</li>
+</ul>	
+

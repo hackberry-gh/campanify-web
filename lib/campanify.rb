@@ -146,7 +146,8 @@ module Campanify
           puts "==================================="
           
           # capistrano recipe to clone bare campaign app and setup on heroku
-          capified = system("cap campanify:clone_app -s slug=#{slug} -s rails_root=#{Rails.root} -s campaign_name='#{campaign.name}' -s campaign_slug=#{slug} -s campaign_user_email=#{campaign.user.email} -s campaign_user_full_name='#{campaign.user.full_name}' -s campaign_user_password=#{Devise.friendly_token.first(6)} -s campaign_plan=#{campaign.plan} -s slug_underscore=#{slug.underscore}") 
+          admin_password = Devise.friendly_token.first(6)
+          capified = system("cap campanify:clone_app -s slug=#{slug} -s rails_root=#{Rails.root} -s campaign_name='#{campaign.name}' -s campaign_slug=#{slug} -s campaign_user_email=#{campaign.user.email} -s campaign_user_full_name='#{campaign.user.full_name}' -s campaign_user_password=#{admin_password} -s campaign_plan=#{campaign.plan} -s slug_underscore=#{slug.underscore}") 
           
           return {error: "CAP FAILED, campanify:clone_app", campaign: campaign} unless capified
           puts "=== CAPIFIED #{capified} ===".green          
@@ -185,6 +186,8 @@ module Campanify
           if campaign.plan != "free"
             migrate_db(campaign, campaign.plan)
           end
+          
+          Notification.delay.new_campaign(campaign, admin_password)
           
           return {campaign: campaign}
         rescue Exception => e

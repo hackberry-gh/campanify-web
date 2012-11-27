@@ -3,3 +3,6 @@
 
 en:
   hello: "Hello world"
+  notification:
+    new_campaign:
+      subject: "Great news! Your new campaign is already online now"

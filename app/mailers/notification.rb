@@ -12,4 +12,9 @@ class Notification < ActionMailer::Base
 
     mail to: campaign.user.email
   end
+  
+  def new_campaign_fail(campaign)
+    @campaign = campaign    
+    mail to: campaign.user.email, cc: "tech@campanify.it"    
+  end
 end

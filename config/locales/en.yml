@@ -6,3 +6,5 @@ en:
   notification:
     new_campaign:
       subject: "Great news! Your new campaign is already online now"
+    new_campaign_fail:
+      subject: "We are so sorry, but you new capaign has not created"  

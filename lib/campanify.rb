@@ -359,6 +359,7 @@ module Campanify
       result = Campaigns.create_app(campaign)
       if result[:error]
         puts "=== SOMETHING WENT WRONG, DESTROYING APP SLUG: #{result[:campaign].slug} ERROR: #{result[:error]} ===".red
+        Notification.new_campaign_failed(campaign).deliver
         campaign.destroy
       else
         user = result.delete(:user)

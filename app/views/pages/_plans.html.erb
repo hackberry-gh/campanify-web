@@ -19,7 +19,7 @@
 			<li>25mb(dev)</li>			
 			<li>Send 40,000 / month</li>						
 			<li>Email<br/>&nbsp;</li>
-			<li>$188.95* / month</li>
+			<li><a href="mailto:info@campanify.it?subject=Quote enquiry for Town">Ask for price</a></li>
 			</ul>
 		</div>
 		<div class="span2">
@@ -30,7 +30,7 @@
 			<li>100mb</li>						
 			<li>Send 100,000 / month</li>						
 			<li>Email<br/>&nbsp;</li>
-			<li>$394.95* / month</li>
+			<li><a href="mailto:info@campanify.it?subject=Quote enquiry for City">Ask for price</a></li>
 			</ul>			
 		</div>
 		<div class="span2">
@@ -41,7 +41,7 @@
 			<li>250mb</li>						
 			<li>Send 300,000 / month</li>						
 			<li>Email &amp; Skype<br/>&nbsp;</li>
-			<li>$794.95* / month</li>
+			<li><a href="mailto:info@campanify.it?subject=Quote enquiry for Country">Ask for price</a></li>
 			</ul>			
 		</div>
 		<div class="span2">
@@ -52,7 +52,7 @@
 			<li>500mb</li>						
 			<li>Send 700,000 / month</li>						
 			<li>Email, Skype<br/>Basic phone</li>
-			<li>$1629.95* / month</li>
+			<li><a href="mailto:info@campanify.it?subject=Quote enquiry for Earth">Ask for price</a></li>
 			</ul>
 		</div>
 		<div class="span2">
@@ -86,7 +86,26 @@
 				<option value="7">Email + Skype + Phone</option>												
 				</select>
 			</li>
-			<li>$<span id="amount"></span>* / month</li>
+			<li><a href="javascript:mailtoCustom();">Ask for price</a></li>
 			</ul>
 		</div>
 </div>		
+<script>
+	function mailtoCustom() {
+		
+		var ps_count = 	Number($("#ps-web").val()) + Number($("#ps-worker").val());
+		
+		var href = "mailto:info@campanify.it?subject=Quote enquiry for Custom&body=" + 
+		"ps count:" + " " + ps_count + 
+		"%0D%0A" + 
+		"postgres:" + " " + $("select#postgres").val() +		
+		"%0D%0A" + 
+		"memcachier:" + " " + $("select#memcachier").val() +		
+		"%0D%0A" + 
+		"sendgrid:" + " " + $("select#sendgrid").val() +		
+		"%0D%0A" + 
+		"support:" + " " + $("select#support").val();		
+		
+		location.href = href;
+	}
+</script>

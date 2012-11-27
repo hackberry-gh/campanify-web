@@ -32,9 +32,10 @@ namespace :campanify do
   # end  
   
   desc "Creates new User with given name and email"  
-  task :create_user, [:email, :full_name] => :environment do |t, args|
+  task :create_user, [:email, :first_name, :last_name] => :environment do |t, args|
     include Campanify    
-    create_user(args[:email], args[:full_name])
+    full_name = "#{args[:first_name]} #{args[:last_name]}"
+    puts "User Created: #{create_user(args[:email], full_name)}"
   end
   
   desc "Updates every app on db"

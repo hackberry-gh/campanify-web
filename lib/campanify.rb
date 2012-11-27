@@ -404,7 +404,6 @@ module Campanify
     password = ::Devise.friendly_token.first(6)
     user = User.create(email: email, full_name: full_name, password: password, password_confirmation: password)
     if user.persisted?
-      user.send_reset_password_instructions
       user
     else
       false

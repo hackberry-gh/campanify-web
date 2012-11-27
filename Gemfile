@@ -14,6 +14,7 @@ gem 'pusher'
 gem 'colored'
 gem 'memcachier'
 gem 'dalli'
+gem 'activeadmin'
 
 group :assets do
   gem 'sass-rails',   							'~> 3.2.3'

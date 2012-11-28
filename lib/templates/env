@@ -4,3 +4,6 @@ FOG_DIRECTORY=bucket
 FOG_PROVIDER=AWS
 HEROKU_API_KEY=a684fc7c23b8d8f70589d5379794a259dec68b81
 PLAN=free
+BUILDPACK_URL=https://github.com/ndbroadbent/heroku-buildpack-turbo-sprockets.git
+ERROR_PAGE_URL=http://static.campanify.it/errors/500.html
+MAINTENANCE_PAGE_URL=http://static.campanify.it/errors/maintenance.html

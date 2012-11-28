@@ -139,8 +139,8 @@ module Campanify
             heroku.put_config_vars(slug, k => v)                 
           end
           # maintenance and error pages
-          heroku.put_config_vars(slug, "ERROR_PAGE_URL" => "http://static.campanify.it/errors/500.html") 
-          heroku.put_config_vars(slug, "MAINTENANCE_PAGE_URL" => "http://static.campanify.it/errors/maintenance.html")                                               
+          # heroku.put_config_vars(slug, "ERROR_PAGE_URL" => "http://static.campanify.it/errors/500.html") 
+          # heroku.put_config_vars(slug, "MAINTENANCE_PAGE_URL" => "http://static.campanify.it/errors/maintenance.html")                                               
           puts "=== APP CONFIG SETTED ON HEROKU ===".green
           puts heroku.get_config_vars(slug).body
           puts "==================================="

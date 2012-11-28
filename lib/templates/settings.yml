@@ -223,8 +223,8 @@ development: &development
           - 48
     avatars:
       default_url:
-        big: "http://placedog.com/g/450/450"
-        thumb: "http://placedog.com/g/96/96"  
+        big: "http://placekitten.com/g/450/450"
+        thumb: "http://placekitten.com/g/96/96"  
       big:
         process: resize_to_limit
         sizes: 

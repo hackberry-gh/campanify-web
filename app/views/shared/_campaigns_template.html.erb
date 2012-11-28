@@ -16,7 +16,7 @@
 	<span class="manage"><a href="http://${slug}.campanify.it/admin" target="_blank" rel="tooltip" title="Manage Site"><i class="icon-asterisk"></i></a></span>	
 	
   <span class="plan" data-plan="${plan}">
-	<a href="#" rel="popover" data-original-title="Change Plan" data-html="true" data-placement="left" data-content='<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}">
+	<a href="#" rel="popover" data-original-title="Change Plan" data-html="true" data-placement="left" data-content='<select class="change_campaign_plan input input-small campaign_plan_small" data-id="${id}" onchange="$.changePlan(this);">
 	<option value="free">free</option>	
 	<% if current_user && current_user.level > 0 %>	
 	<option value="town">town</option>
@@ -29,13 +29,13 @@
 
   <span class="theme" data-theme="${theme}">
 	<a href="#" rel="popover" data-original-title="Change Theme" data-placement="left" data-html="true" data-content='
-	<select class="change_campaign_theme input input-small campaign_theme_small" data-id="${id}">
+	<select class="change_campaign_theme input input-small campaign_theme_small" data-id="${id}" onchange="$.changeTheme(this);">
 	<option value="default">default</option>		
 	<option value="naked">naked</option>
 	</select>'><i class="icon-eye-open"></i></a>
 	</span>
 
-	<a href="/api/campaigns/${id}" rel="tooltip" title="Destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?"><i class="icon-remove"></i></a>		
+	<a href="/api/campaigns/${id}" class="destroy" rel="tooltip" title="Destroy" data-remote="true" data-method="delete" data-confirm="Are You Sure?"><i class="icon-remove"></i></a>		
 	</div>		
 </li>
 </script>

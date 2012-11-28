@@ -25,6 +25,27 @@ $(document).ready(function(){
 		errorList.prepend($("<h4>Please correct erros below</h4>"));
 		return errorList.html();
 	}
+	
+	// campaign change plan select
+	$.changePlan = function(e) {
+		var plan = $(e).val();
+		var id = $(e).data("id");		
+		$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {plan: plan}}, function(data){
+			console.log(data);
+			$(".popover").fadeOut();				
+		});
+	}
+	
+	// campaign change theme select
+	$.changeTheme = function(e) {
+		var theme = $(e).val();
+		var id = $(e).data("id");		
+		$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {theme: theme}}, function(data){
+			console.log(data);
+			$(".popover").fadeOut();
+		});
+		return true;
+	}
 		
 	$.initEvents = function() {
 		// new campaign form	
@@ -55,29 +76,7 @@ $(document).ready(function(){
 			form.find("#campaign_plan").val("");		
 			form.prepend( $( $("#campaigns_template_success").html()).hide().fadeIn() );
 		});
-	
-		// campaign change plan select
-		$(".change_campaign_plan").
-		unbind("change").
-		change(function(){
-			var plan = $(this).val();
-			var id = $(this).data("id");		
-			$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {plan: plan}}, function(data){
-				console.log(data);
-			});
-		});
-	
-		// campaign change theme select
-		$(".change_campaign_theme").
-		unbind("change").
-		change(function(){
-			var theme = $(this).val();
-			var id = $(this).data("id");		
-			$.post("/api/campaigns/" + id,{_method: "PUT", campaign: {theme: theme}}, function(data){
-				console.log(data);
-			});
-		});
-	
+		
 		// campaign delete button
 		$("a.destroy").
 		unbind("ajax:beforeSend").
@@ -96,7 +95,7 @@ $(document).ready(function(){
 		}).
 		unbind("ajax:success").				
 		on("ajax:success", function(event, data, status) {
-			// console.log($(this))
+			console.log($(this))
 			var tr = $(this).parents("li");
 			tr.fadeOut(function () { tr.remove() });
 		});

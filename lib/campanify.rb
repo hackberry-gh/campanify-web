@@ -150,7 +150,11 @@ module Campanify
           capified = system("cap campanify:clone_app -s slug=#{slug} -s rails_root=#{Rails.root} -s campaign_name='#{campaign.name}' -s campaign_slug=#{slug} -s campaign_user_email=#{campaign.user.email} -s campaign_user_full_name='#{campaign.user.full_name}' -s campaign_user_password=#{admin_password} -s campaign_plan=#{campaign.plan} -s slug_underscore=#{slug.underscore}") 
           
           return {error: "CAP FAILED, campanify:clone_app", campaign: campaign} unless capified
-          puts "=== CAPIFIED #{capified} ===".green          
+          puts "=== CAPIFIED #{capified} ===".green
+
+          enable_env = system("cap campanify:enable_env_compile -s slug=#{slug}")
+          return {error: "ENABLE ENV FAILED, campanify:enable_env_compile", campaign: campaign} unless enable_env
+          puts "=== ENV ENABLED #{enable_env} ===".green
 
           # capistrano recipe to create heroku postres db
           setup_db = system("cap campanify:setup_db -s slug=#{slug}")
@@ -359,8 +363,8 @@ module Campanify
       result = Campaigns.create_app(campaign)
       if result[:error]
         puts "=== SOMETHING WENT WRONG, DESTROYING APP SLUG: #{result[:campaign].slug} ERROR: #{result[:error]} ===".red
-        Notification.new_campaign_failed(campaign).deliver
         campaign.destroy
+        Notification.new_campaign_failed(campaign).deliver
       else
         user = result.delete(:user)
         campaign.set_status(Campaign::ONLINE)

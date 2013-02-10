@@ -9,4 +9,12 @@ ActiveAdmin.register User do
     column :level
     default_actions 
   end
+  form do |f|
+    f.inputs do
+        f.input :email
+        f.input :full_name
+        f.input :level
+    end
+    f.buttons
+  end
 end

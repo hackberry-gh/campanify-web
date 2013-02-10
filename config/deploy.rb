@@ -135,7 +135,7 @@ namespace :campanify do
     puts "=== THEME CHANGING COMPLETE #{theme} ==="    
   end
 
-  task :enable_env_compile => :campanify do
+  task :enable_env_compile, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}" 
     run "cd #{app_dir} && #{bundle_cmd} exec heroku labs:enable user-env-compile --app #{slug}"     
   end

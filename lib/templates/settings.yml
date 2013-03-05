@@ -2,7 +2,7 @@ development: &development
   # Application Name
   # ---------------------------------------------  
   application: Campanify
-  
+
   # Modules
   # ---------------------------------------------  
   # To enable/disable modules simple add remove them
@@ -14,7 +14,8 @@ development: &development
     - posts
     - events   
     - media 
-  
+    - points
+
   # Mailer
   # ---------------------------------------------
   # application wide mailer settings    
@@ -24,7 +25,7 @@ development: &development
     # mails will send from this domain
     # needs restart
     host: 'localhost:5000'
-  
+
   # User
   # ---------------------------------------------
   # Mostly about petition form and other user centered settings  
@@ -34,7 +35,7 @@ development: &development
     abilities:
       can_post: true
       can_comment: true
-      
+
     # Fields
     # -------------------------------------------
     fields:
@@ -54,23 +55,23 @@ development: &development
       # - mobile_phone 
       # - newsletter   
 
-    
+
     # Options
     # -------------------------------------------    
     # uncomment below line to skip checkboxes
     # options: []    
-    options: 
+    options: &options
       send_updates: true      
       # legal_aggrement: true
-    
+
     # Validations
     # -------------------------------------------
     # to make a field mandatory list it below
     # email is default and can't be removed
-    validates:
+    validates: &validates
       - first_name
       - last_name
-    
+
     # Password
     # -------------------------------------------
     # never(default): never ask for password
@@ -84,7 +85,7 @@ development: &development
     # after_signup_with_instructions: same as after_signup but sends 
     # reset password instructions immediately
     password_required: never
-    
+
     # Confirmation
     # -------------------------------------------
     # never: never send confirmation email and mark user confirmed!
@@ -93,20 +94,20 @@ development: &development
     # strict: send confirmation email after sign up and don't allow user to sign in without confirmation
     # CAUTION !!! Strict option can't be branched, so if you select strict it rules all branches    
     confirmation_required: never
-    
+
     # Redirection Urls
     # -------------------------------------------
-    redirects:
+    redirects: &redirects
       # can be any url or 'show' to redirect user profile page
       after_sign_up: show
       after_post: show
       after_sign_in: show
       after_inactive_sign_in: /
       after_sign_out: /
-      
+
     # Hooks
     # -------------------------------------------
-    hooks:
+    hooks: &hooks
       # hooks for after creation
       # uncomment below line to do nothing
       # after_create: []
@@ -114,47 +115,37 @@ development: &development
         # sends reset password instructions to user
         # you should enable this if you choose after_signup for password_required
         # user: send_reset_password_instructions
-        
+
         # or skip sending password instructions and generate reset token, 
         # so you can avoid sending two emails after signup if you'r planning
         # to send welcome email, but don't forget to some instructions about
         # resetting password!
         # user: generate_reset_password_token
-        
+
         # sends after_signup email to user
         # don't forget change subject and body from translations
         # user_mailer.after_signup_email.subject
         # user_mailer.after_signup_email.body
         # mail: after_signup_email
-        
+
         # posts user fields to given url
         # http_post: http://localhost:5000/users/hooks/http_post
-        
-        # tweets user display name | first name with given message 
-        # to given account's timeline
-        # tweet: 
-        #     username:
-        #     consumer_key:
-        #     consumer_secret:
-        #     oauth_token:
-        #     oauth_token_secret:
-        #     status: t('hooks.after_crate.tweet.status')
-        
-        # posts user display name | first name with given message 
-        # to given target on facebook
-        # targets:  user, user must be signuped via facebook connect
-        #           PAGE_ID, page of given id must authorize the given app
-        # facebook:
-        #     target:
-        #     app_id:
-        #     app_secret:
-        #     message: t('hooks.after_crate.facebook.message')          
-      
+
+        # tweets a message after signup behalf of user
+        # default tweet is html.sharing.user.tweet
+        # to change message create a new translation and put here
+        # tweet: sharing.user.tweet
+
+        # posts user timeline after signup
+        # default message is html.sharing.user.title
+        # to change message create a new translation and put here
+        # facebook: sharing.user.title
+
   # Time Zone
   # ---------------------------------------------  
   # needs restart
   timezone: 'Europe/London'
-  
+
   # Completed Locales
   # ---------------------------------------------
   # enter language code to make available on site
@@ -167,14 +158,14 @@ development: &development
       - en  
     # available options are from_browser, from_branch
     preferred_source: from_browser  
-    
+
   # Branches
   # ---------------------------------------------
   # to use general settings for all bracnhes or 
   # skip branching uncomment below line
-  
+
   # branches: []
-  
+
   # to customize settings per branch use below settings
   # unlisted branches will use default user settings set above
   # branch id must valid ISO 3166-1 alpha-2 country code
@@ -202,14 +193,14 @@ development: &development
           after_sign_out: /
         hooks:
           after_create: []
-                   
+
   # Assets        
   # ---------------------------------------------  
   assets:
-    # valid options are s3, filesystem
+    # valid options are fog, file
     # needs restart    
-    host_type: filesystem  
-    
+    storage: file  
+
   # Media
   # ---------------------------------------------  
   media:
@@ -236,7 +227,7 @@ development: &development
         sizes: 
           - 96
           - 96
-         
+
   # Devise
   # ---------------------------------------------  
   # needs restart
@@ -245,14 +236,31 @@ development: &development
     allow_unconfirmed_access_for: 365    
     # value in days
     reset_password_within: 365
-  
+    # invitation limit
+    invitation_limit: 10
+
+  # Points
+  # ---------------------------------------------  
+  points:
+    # must be always 0
+    minimum_point_amount: 0
+    # for security reasons, we prevent earning more then given points here
+    maximum_point_amount: 10
+    actions: 
+      # point earning actions
+      visits:
+        # point amount
+        point: 1
+      recruits:
+        point: 5
+
   # Content
   # ---------------------------------------------  
   pages:
     # Home Page Slug
     # needs restart    
     home_page_slug: home
-    
+
     # Comments
     comments: false
   posts:
@@ -261,12 +269,12 @@ development: &development
     comments: true
   users:
     comments: false  
-  
+
   # Pagination
   # ---------------------------------------------
   pagination:
     per: 10
-  
+
   # Facebook
   # ---------------------------------------------
   facebook:
@@ -274,11 +282,16 @@ development: &development
     app_secret: "177ff317289b4d7ddb237f7f2945b28b"
     scope: "email"
     connect: true
-    
+
+  twitter:
+    consumer_key: "XdYM5tPhsgdqOFLO7s2pbg"
+    consumer_secret: "W85F2NMMoSf9To2HsdVzh7HRaMnUscWABidh8vPe0"
+    connect: true  
+
   # Development Settings
   # ---------------------------------------------  
   development:
     ip: 86.176.176.71
-         
+
 test: *development
 production: *development

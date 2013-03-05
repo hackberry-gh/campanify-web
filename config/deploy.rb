@@ -38,7 +38,7 @@ namespace :campanify do
     file_name = "#{rails_root}/lib/templates/settings.yml"
     content = File.read(file_name)
     content = content.gsub(/localhost:5000/, "#{slug}.campanify.it")      
-    content = content.gsub("host_type: filesystem", "host_type: s3")            
+    content = content.gsub("storage: file", "storage: fog")            
     content = content.gsub("storage: file", "storage: fog")                  
     target_file_name = "#{app_dir}/config/settings.yml"
     put_respons = put content, target_file_name    

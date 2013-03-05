@@ -7,21 +7,21 @@ module Campanify
     end
   end
   
-  module S3
+  module GoogleStorageClient
+
     class << self
-      def connect!
-        AWS::S3::Base.establish_connection!(
-          :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
-          :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
-        ) unless AWS::S3::Base.connected?
+      def storage
+        @storage ||= Fog::Storage.new(
+          :provider => "Google",
+          :google_storage_access_key_id  => ENV['GOOGLE_STORAGE_ACCESS_KEY_ID'],
+          :google_storage_secret_access_key => ENV['GOOGLE_STORAGE_SECRET_ACCESS_KEY']
+        )
       end
-      def create_bucket(*args)
-        connect!
-        AWS::S3::Bucket.create(*args)
+      def create_bucket(name)
+        storage.put_bucket(name)
       end
-      def delete_bucket(*args)
-        connect!
-        AWS::S3::Bucket.delete(*args)
+      def delete_bucket(name)
+        storage.delete_bucket(name)
       end
     end
   end
@@ -112,7 +112,7 @@ module Campanify
     class << self
       
       include Heroku 
-      include S3       
+      include GoogleStorageClient       
       
       def create_app(campaign)  
         puts "=== APP CREATION STARTED AT #{Time.now} ===".green
@@ -125,10 +125,10 @@ module Campanify
         begin
           app_dir = "#{APPS_DIR}/#{slug}"
           
-          # create s3 bucket per campaign
+          # create bucket per campaign
           
-          S3.create_bucket("campanify-app-#{slug}") 
-          puts "=== S3 BUCKET CREATED ===".green                 
+          GoogleStorageClient.create_bucket("campanify-app-#{slug}") 
+          puts "=== BUCKET CREATED ===".green                 
 
           # .env to heroku config mapping
           file_name = "#{Rails.root}/lib/templates/env"
@@ -356,7 +356,7 @@ module Campanify
   
   extend ActiveSupport::Concern
   include Heroku
-  include S3  
+  include GoogleStorageClient  
   
   def create_app(slug)
     if campaign = Campaign.find_by_slug(slug)
@@ -378,7 +378,7 @@ module Campanify
       # system "rm -rf #{APPS_DIR}/#{slug}"
       system("cap campanify:remove_app -s slug=#{slug}")
       heroku.delete_app(slug) rescue nil
-      S3.delete_bucket("campanify-app-#{slug}", :force => true)  rescue nil  
+      GoogleStorageClient.delete_bucket("campanify-app-#{slug}", :force => true)  rescue nil  
     end
   end
   

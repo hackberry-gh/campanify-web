@@ -1,7 +1,7 @@
 defaults: &defaults
-  fog_provider: 'AWS'
-  aws_access_key_id: "AKIAJFNPNRJIIOJYN76Q"
-  aws_secret_access_key: "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"
+  fog_provider: 'Google'
+  google_storage_access_key_id: "GOOGT4KZIJKEYMBZZMGH"
+  google_storage_secret_access_key: "HivKI84qfaswM1f0L2IDq9DS1KmvPq4vzDj4e9QR"
   fog_directory: "bucket"
   # You may need to specify what region your storage bucket is in
   # fog_region: "eu-west-1"

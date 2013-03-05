@@ -9,12 +9,13 @@ gem 'devise'
 gem 'heroku'
 gem 'heroku-api'
 gem 'delayed_job_active_record'
-gem 'aws-s3', :require => "aws/s3"
+gem 'fog'
 gem 'pusher'
 gem 'colored'
 gem 'memcachier'
 gem 'dalli'
 gem 'activeadmin'
+gem 'quiet_assets'
 
 group :assets do
   gem 'sass-rails',   							'~> 3.2.3'

@@ -59,7 +59,7 @@ development: &development
     # Options
     # -------------------------------------------    
     # uncomment below line to skip checkboxes
-    # options: []    
+    # options: {}    
     options: &options
       send_updates: true      
       # legal_aggrement: true
@@ -69,8 +69,10 @@ development: &development
     # to make a field mandatory list it below
     # email is default and can't be removed
     validates: &validates
-      - first_name
-      - last_name
+      first_name:
+        presence: true
+      last_name:
+        presence: true  
 
     # Password
     # -------------------------------------------
@@ -179,10 +181,9 @@ development: &development
       locales:
         - en
       user:
-        fields:
-          - email
-        options: []
-        validates: []
+        fields: *fields
+        options: *options
+        validates: *validates
         password_required: never
         confirmation_required: never
         redirects:
@@ -192,7 +193,7 @@ development: &development
           after_inactive_sign_in: /
           after_sign_out: /
         hooks:
-          after_create: []
+          after_create: {}
 
   # Assets        
   # ---------------------------------------------  

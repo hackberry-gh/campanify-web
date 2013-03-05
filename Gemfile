@@ -1,6 +1,8 @@
 source 'http://rubygems.org'
 source "http://bundler-api.herokuapp.com"
 
+ruby '1.9.3'
+
 gem 'rails', 												'3.2.11'
 gem 'pg'
 gem 'foreman'

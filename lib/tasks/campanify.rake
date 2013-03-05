@@ -45,6 +45,13 @@ namespace :campanify do
       system("cap campanify:push_app -s slug=#{app.slug}")      
     end
   end
+
+  desc "Migrates every app on db"
+  task :migrate_all => :environment do
+    Campaign.all.each do |app|
+      system("cap campanify:migrate_db -s slug=#{app.slug}")
+    end
+  end
   
   desc "Push every app on db"
   task :push_all => :environment do

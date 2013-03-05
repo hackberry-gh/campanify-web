@@ -41,5 +41,5 @@ group :test, :development do
 	gem 'capybara', 									'~> 1.1.2'
 end
 
-gem 'capistrano'
+gem 'capistrano'										
 gem 'rvm-capistrano'

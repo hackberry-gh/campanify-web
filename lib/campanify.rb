@@ -21,6 +21,7 @@ module Campanify
         storage.put_bucket(name)
       end
       def delete_bucket(name)
+        storage.directories.keep_if{|d| d.key == name}.first.files.each{|f| f.destroy }
         storage.delete_bucket(name)
       end
     end
@@ -378,7 +379,7 @@ module Campanify
       # system "rm -rf #{APPS_DIR}/#{slug}"
       system("cap campanify:remove_app -s slug=#{slug}")
       heroku.delete_app(slug) rescue nil
-      GoogleStorageClient.delete_bucket("campanify-app-#{slug}", :force => true)  rescue nil  
+      GoogleStorageClient.delete_bucket("campanify-app-#{slug}")  rescue nil  
     end
   end
   

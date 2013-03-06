@@ -82,6 +82,11 @@ namespace :campanify do
     app_dir = "/home/campanify/apps/#{slug}"
     run "cd #{app_dir} && #{bundle_cmd} exec heroku run rake db:seed:original --app #{slug} --trace"    
   end  
+
+  task :seed_theme_db, :roles => :campanify do
+    app_dir = "/home/campanify/apps/#{slug}"
+    run "cd #{app_dir} && #{bundle_cmd} exec heroku run rake db:seed:themes_#{theme}_install --app #{slug} --trace"    
+  end  
   
   task :backup_db, :roles => :campanify do
     app_dir = "/home/campanify/apps/#{slug}"

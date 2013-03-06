@@ -69,12 +69,16 @@ $(document).ready(function(){
 		unbind('ajax:success').				
 		on("ajax:success", function(event, data, status) {
 			
-			var form = $(this);
-			var submit = form.find("button[type=submit]");
+			var form = $(this),
+			submit = form.find("button[type=submit]"),
+			tmpl = '<div class="alert alert-success">' + 
+			'<button type="button" class="close" data-dismiss="alert">×</button>' + 
+			'Your campaign is been creating, it takes several minutes, you can track its status by clicking `My Campaign` on the menu.' +
+			'</div>';
 			submit.removeAttr('disabled').text(submit.data('val'));
 			form.find("#campaign_name").val("");
 			form.find("#campaign_plan").val("");		
-			form.prepend( $( $("#campaigns_template_success").html()).hide().fadeIn() );
+			form.prepend( $( tmpl ).hide().fadeIn() );
 		});
 		
 		// campaign delete button

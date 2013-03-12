@@ -51,7 +51,7 @@ module Campanify
         town: {
           ps: {
             web: 2,
-            worker: 0
+            worker: 1
           },
           addons: {
             "pgbackups" => "auto-week",

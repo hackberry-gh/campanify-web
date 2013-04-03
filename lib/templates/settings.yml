@@ -32,47 +32,69 @@ development: &development
   user: &user
     # Abilities
     # -------------------------------------------
-    abilities:
+    abilities: &abilities
       can_post: true
       can_comment: true
 
     # Fields
     # -------------------------------------------
+    # to add additional field which not listed below you can use meta field
+    # ex: meta_national_id
+    # if you add additional fields don't forget to add their translations to user!
+    # ex: activerecord.attributes.user.meta_national_id: National ID
     fields: &fields
       - email
-      - first_name
-      - last_name
+      # - first_name
+      # - last_name
       # - full_name
       # - display_name
       # - birth_year
       # - birth_date
+      # - gender
       # - country
       # - region
       # - city
       # - address
       # - post_code
       # - phone
-      # - mobile_phone 
-      # - newsletter   
+      # - mobile_phone
+      # - send_updates
+      # - legal_aggrement
+      # - avatar
+      # - meta_national_id
 
 
     # Options
     # -------------------------------------------    
-    # uncomment below line to skip checkboxes
-    # options: {}    
+    # optional checkboxes, set true or false for default state
     options: &options
-      send_updates: true      
+      {}
+      # send_updates: true      
       # legal_aggrement: true
 
     # Validations
     # -------------------------------------------
-    # to make a field mandatory list it below
-    # email is default and can't be removed
+    # standard rails validations
+    # email is validating always by default and can't be removed or added
+    # http://guides.rubyonrails.org/active_record_validations_callbacks.html
     validates: &validates
-      first_name:
-        presence: true
-      last_name:
-        presence: true  
+      {}
+      # first_name:
+      #   presence: true
+      # last_name:
+      #   presence: true  
+      # send_updates:
+      #   acceptance: 
+      #     accept: true
+      #     allow_nil: false
+      # phone:
+      #   numericality:
+      #     only_integer: true
+      #   length:
+      #     is: 10 
+      # meta_national_id:
+      #   format:
+      #     with: /[A-Z0-9]{10}/
 
     # Password
     # -------------------------------------------
@@ -112,8 +134,8 @@ development: &development
     hooks: &hooks
       # hooks for after creation
       # uncomment below line to do nothing
-      # after_create: []
-      after_create: []
+      # after_create: {}
+      after_create: {}
         # sends reset password instructions to user
         # you should enable this if you choose after_signup for password_required
         # user: send_reset_password_instructions
@@ -166,7 +188,7 @@ development: &development
   # to use general settings for all bracnhes or 
   # skip branching uncomment below line
 
-  # branches: []
+  # branches: {}
 
   # to customize settings per branch use below settings
   # unlisted branches will use default user settings set above
@@ -174,26 +196,28 @@ development: &development
   # country code must valid ISO 3166-1 alpha-2 country code  
   # adding new branches needs restart
   # changing timezone needs restart
-  branches:
-    GB:
-      country_code: GB
-      timezone: Europe/London
-      locales:
-        - en
-      user:
-        fields: *fields
-        options: *options
-        validates: *validates
-        password_required: never
-        confirmation_required: never
-        redirects:
-          after_sign_up: /pages/thank-you
-          after_post: show
-          after_sign_in: show
-          after_inactive_sign_in: /
-          after_sign_out: /
-        hooks:
-          after_create: {}
+  branches: {}
+    # GB:
+    #   country_code: GB
+    #   timezone: Europe/London
+    #   locales:
+    #     - en
+    #   user:
+    #     abilities: *abilities
+    #     fields: *fields
+    #     options: *options
+    #     validates: *validates
+    #     password_required: never
+    #     confirmation_required: never
+    #     redirects:
+    #       after_sign_up: /pages/thank-you
+    #       after_post: show
+    #       after_sign_in: show
+    #       after_inactive_sign_in: /
+    #       after_sign_out: /
+    #     hooks:
+    #       after_create:
+    #         mail: after_signup_email
 
   # Assets        
   # ---------------------------------------------  
@@ -279,18 +303,19 @@ development: &development
   # Facebook
   # ---------------------------------------------
   facebook:
-    app_id: "165494140246687"
-    app_secret: "177ff317289b4d7ddb237f7f2945b28b"
-    scope: "email"
+    app_id: "YOUR_FACEBOOK_APP_ID"
+    app_secret: "YOUR_FACEBOOK_APP_SECRET"
+    # add publish_stream if you want to use after_create facebook hook
+    scope: "email,publish_stream"
     connect: true
-
   twitter:
-    consumer_key: "XdYM5tPhsgdqOFLO7s2pbg"
-    consumer_secret: "W85F2NMMoSf9To2HsdVzh7HRaMnUscWABidh8vPe0"
-    connect: true  
+    consumer_key: "TWITTER_APP_CNSMR_KEY"
+    consumer_secret: "TWITTER_APP_CNSMR_SECRET"
+    connect: true
 
   # Development Settings
   # ---------------------------------------------  
+  # usefull for testing locale branches
   development:
     ip: 86.176.176.71
 

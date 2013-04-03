@@ -128,14 +128,14 @@ module Campanify
           
           # create bucket per campaign
           
-          GoogleStorageClient.create_bucket("campanify-app-#{slug}") 
+          GoogleStorageClient.create_bucket("ca-#{slug}") 
           puts "=== BUCKET CREATED ===".green                 
 
           # .env to heroku config mapping
           file_name = "#{Rails.root}/lib/templates/env"
           content = File.read(file_name)
           content = content.gsub(/free/, campaign.plan)      
-          content = content.gsub(/bucket/, "campanify-app-#{slug}")
+          content = content.gsub(/bucket/, "ca-#{slug}")
           Hash[content.split("\n").map{|v| v.split("=")}].each do |k,v|
             heroku.put_config_vars(slug, k => v)                 
           end
@@ -379,7 +379,7 @@ module Campanify
       # system "rm -rf #{APPS_DIR}/#{slug}"
       system("cap campanify:remove_app -s slug=#{slug}")
       heroku.delete_app(slug) rescue nil
-      GoogleStorageClient.delete_bucket("campanify-app-#{slug}")  rescue nil  
+      GoogleStorageClient.delete_bucket("ca-#{slug}")  rescue nil  
     end
   end
   

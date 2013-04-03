@@ -46,7 +46,7 @@ namespace :campanify do
     
     file_name = "#{rails_root}/lib/templates/asset_sync.yml"
     content = File.read(file_name)
-    content = content.gsub(/bucket/, "campanify-app-#{slug}")      
+    content = content.gsub(/bucket/, "ca-#{slug}")      
     target_file_name = "#{app_dir}/config/asset_sync.yml"
     put_respons = put content, target_file_name    
     puts "=== ASSET_SYNC.YML GENERATED ==="

@@ -17,7 +17,13 @@ class Campaign < ActiveRecord::Base
   before_update     :change_theme  
   before_destroy    :destroy_app
   
-  attr_accessor  :migration_steps
+  def migration_steps
+    @migration_steps ||= []
+  end
+  
+  def migration_steps=ms
+    self.migration_steps = ms
+  end
   
   def serializable_hash(options = {})
     super((options || { }).merge({

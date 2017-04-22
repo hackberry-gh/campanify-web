@@ -1,4 +1,5 @@
 == Campanify
 
-Coming soon...
-:(
+Campanify is used to serve Greenpeace worldwide, for their several successfull campaigns e.g. Save The Arctic, Volkswagen Dark Side, Liga das Florestas, Bir Milyon Kahraman and so on.
+
+This repository is the core app where users can manage their app instances (see https://github.com/hackberry-gh/campanify-app). It's designed to hack heroku at the time it was possible, due to their API changes everything is obsolete and semi broken now, and Campanify as a platform has already abondoned at 2014.
